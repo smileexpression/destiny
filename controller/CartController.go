@@ -117,7 +117,7 @@ func CartDel(c *gin.Context) {
 	}
 }
 
-// 该函数使用query传递单个参数
+// CartDelOne 该函数使用query传递单个参数
 func CartDelOne(c *gin.Context) {
 	user, _ := c.Get("user")
 	userinfo := user.(model.User)

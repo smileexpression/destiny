@@ -187,7 +187,7 @@ type summary struct {
 	PayMoney  float64
 }
 
-// 临时收录获取订单记录的所有接口
+// SoldList 临时收录获取订单记录的所有接口
 func SoldList(c *gin.Context) {
 
 	user, _ := c.Get("user")

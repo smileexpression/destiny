@@ -13,7 +13,7 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-// 生成token
+// ReleaseToken 生成token
 func ReleaseToken(user model.User) (string, error) {
 	expirationTime := time.Now().Add(7 * 24 * time.Hour)
 	claims := &Claims{
