@@ -5,7 +5,7 @@ import (
 
 	"github.com/golang-jwt/jwt"
 
-	"smile.expression/destiny/model"
+	"smile.expression/destiny/pkg/model"
 )
 
 var jwtKey = []byte("a_secret_crect")

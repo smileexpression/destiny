@@ -2,11 +2,12 @@ package main
 
 import (
 	"os"
-	"smile.expression/destiny/common"
-	"smile.expression/destiny/routes"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
+
+	"smile.expression/destiny/pkg/common"
+	"smile.expression/destiny/pkg/routes"
 )
 
 func main() {

@@ -8,7 +8,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
-	"smile.expression/destiny/model"
+	"smile.expression/destiny/pkg/model"
 )
 
 var DB *gorm.DB

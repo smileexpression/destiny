@@ -6,8 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"smile.expression/destiny/common"
-	"smile.expression/destiny/model"
+	"smile.expression/destiny/pkg/common"
+	"smile.expression/destiny/pkg/model"
 )
 
 func AuthMiddleware() gin.HandlerFunc {

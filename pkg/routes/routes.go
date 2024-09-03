@@ -3,8 +3,8 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 
-	"smile.expression/destiny/controller"
-	"smile.expression/destiny/middleware"
+	"smile.expression/destiny/pkg/controller"
+	"smile.expression/destiny/pkg/middleware"
 )
 
 func CollectRoute(r *gin.Engine) *gin.Engine {
