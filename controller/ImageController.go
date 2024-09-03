@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"destiny/common"
-	"destiny/model"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"smile.expression/destiny/common"
+	"smile.expression/destiny/model"
 
 	"github.com/gin-gonic/gin"
 )

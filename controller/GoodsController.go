@@ -2,11 +2,11 @@ package controller
 
 import (
 	"crypto/rand"
-	"destiny/common"
-	"destiny/model"
 	"fmt"
 	"math/big"
 	"net/http"
+	"smile.expression/destiny/common"
+	"smile.expression/destiny/model"
 	"strconv"
 
 	"gorm.io/gorm"

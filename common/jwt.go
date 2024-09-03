@@ -1,8 +1,8 @@
 package common
 
 import (
-	"destiny/model"
 	"github.com/golang-jwt/jwt"
+	"smile.expression/destiny/model"
 	"time"
 )
 

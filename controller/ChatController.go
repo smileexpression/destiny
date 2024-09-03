@@ -1,20 +1,21 @@
 package controller
 
 import (
-	"destiny/common"
-	"destiny/model"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+
+	"smile.expression/destiny/common"
+	"smile.expression/destiny/model"
 )
 
-type chatDto struct {
+type ChatDto struct {
 	Type    string
 	Content string
 }
 
-func ToChatDto(chat model.Chat) chatDto {
-	return chatDto{
+func ToChatDto(chat model.Chat) ChatDto {
+	return ChatDto{
 		Type:    chat.Type,
 		Content: chat.Content,
 	}
@@ -24,7 +25,7 @@ type single struct {
 	Id       string
 	Nickname string
 	Avatar   string
-	Chat     []chatDto
+	Chat     []ChatDto
 }
 
 func GetMsg(ctx *gin.Context) {
@@ -43,7 +44,7 @@ func GetMsg(ctx *gin.Context) {
 		var chat []model.Chat
 		DB.Table("chats").Where("me = ? and you = ?", id, chatList[i].You).Find(&chat)
 		// fmt.Println(chat)
-		var chatDto []chatDto
+		var chatDto []ChatDto
 		for j := 0; j < len(chat); j++ {
 			chatDto = append(chatDto, ToChatDto(chat[j]))
 		}

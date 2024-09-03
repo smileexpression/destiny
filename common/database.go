@@ -1,9 +1,9 @@
 package common
 
 import (
-	"destiny/model"
 	"fmt"
 	"net/url"
+	"smile.expression/destiny/model"
 
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"

@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"destiny/common"
-	"destiny/model"
 	"net/http"
+	"smile.expression/destiny/common"
+	"smile.expression/destiny/model"
 	"strings"
 
 	"github.com/gin-gonic/gin"

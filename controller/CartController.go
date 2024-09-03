@@ -1,10 +1,10 @@
 package controller
 
 import (
-	"destiny/common"
-	"destiny/model"
 	"fmt"
 	"net/http"
+	"smile.expression/destiny/common"
+	"smile.expression/destiny/model"
 	"strconv"
 
 	"github.com/gin-gonic/gin"

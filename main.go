@@ -1,9 +1,9 @@
 package main
 
 import (
-	"destiny/common"
-	"destiny/routes"
 	"os"
+	"smile.expression/destiny/common"
+	"smile.expression/destiny/routes"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"

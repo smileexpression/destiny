@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"destiny/controller"
-	"destiny/middleware"
+	"smile.expression/destiny/controller"
+	"smile.expression/destiny/middleware"
 
 	"github.com/gin-gonic/gin"
 )

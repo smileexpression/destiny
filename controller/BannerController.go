@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"destiny/common"
-	"destiny/model"
+	"smile.expression/destiny/common"
+	"smile.expression/destiny/model"
 
 	"github.com/gin-gonic/gin"
 )

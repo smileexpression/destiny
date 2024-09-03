@@ -1,4 +1,4 @@
-module destiny
+module smile.expression/destiny
 
 go 1.23
 
