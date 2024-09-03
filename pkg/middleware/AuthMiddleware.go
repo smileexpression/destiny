@@ -2,12 +2,13 @@ package middleware
 
 import (
 	"net/http"
+	"smile.expression/destiny/pkg/database"
+	"smile.expression/destiny/pkg/database/model"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 
 	"smile.expression/destiny/pkg/common"
-	"smile.expression/destiny/pkg/model"
 )
 
 func AuthMiddleware() gin.HandlerFunc {
@@ -36,7 +37,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		//验证通过后获取claim中的userid
 		userid := claims.UserID
 
-		DB := common.GetDB()
+		DB := database.GetDB()
 		var user model.User
 		DB.First(&user, userid)
 

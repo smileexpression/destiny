@@ -4,15 +4,14 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"smile.expression/destiny/pkg/database"
+	"smile.expression/destiny/pkg/database/model"
 
 	"github.com/gin-gonic/gin"
-
-	"smile.expression/destiny/pkg/common"
-	"smile.expression/destiny/pkg/model"
 )
 
 func HandleUpload(c *gin.Context) {
-	db := common.GetDB()
+	db := database.GetDB()
 
 	// 使用c.MultipartForm()从上下文中检索多部分表单数据
 	form, err := c.MultipartForm()
@@ -61,7 +60,7 @@ func HandleUpload(c *gin.Context) {
 }
 
 func HandleImage(c *gin.Context) {
-	db := common.GetDB()
+	db := database.GetDB()
 
 	// 从上下文中获取查询参数"id"
 	id := c.Query("id")
@@ -83,7 +82,7 @@ func HandleImage(c *gin.Context) {
 }
 
 func DeleteImage(c *gin.Context) {
-	db := common.GetDB()
+	db := database.GetDB()
 	id := c.Query("id")
 	db.Where("id = ?", id).Delete(&model.Image{})
 	c.JSON(http.StatusOK, gin.H{"message": "image deleted"})

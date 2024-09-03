@@ -2,17 +2,17 @@ package main
 
 import (
 	"os"
+	"smile.expression/destiny/pkg/database"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 
-	"smile.expression/destiny/pkg/common"
 	"smile.expression/destiny/pkg/routes"
 )
 
 func main() {
 	InitConfig()
-	common.InitDB()
+	database.InitDB()
 	r := gin.Default()
 	r = routes.CollectRoute(r)
 

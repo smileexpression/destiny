@@ -4,13 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"smile.expression/destiny/pkg/database"
+	model2 "smile.expression/destiny/pkg/database/model"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-
-	"smile.expression/destiny/pkg/common"
-	"smile.expression/destiny/pkg/model"
 )
 
 type OrderInfo struct {
@@ -25,7 +24,7 @@ func CreateOrder(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"msg": "user not exist"})
 		return
 	}
-	userInfo := user.(model.User)
+	userInfo := user.(model2.User)
 
 	var orderInfo OrderInfo
 	//绑定结构体,接收body
@@ -37,8 +36,8 @@ func CreateOrder(ctx *gin.Context) {
 	}
 
 	//生成订单
-	var good model.Goods
-	DB := common.GetDB()
+	var good model2.Goods
+	DB := database.GetDB()
 	DB.Where("ID=?", orderInfo.Id).Find(&good)
 	if good.IsSold {
 		ctx.JSON(200, gin.H{
@@ -50,7 +49,7 @@ func CreateOrder(ctx *gin.Context) {
 	DB.Model(&good).Update("is_sold", true) //要不要考虑多线程？
 	pMoney, _ := strconv.Atoi(good.Price)   //商品的价格为string，订单pay为int（字段类型）
 
-	order := model.Order{
+	order := model2.Order{
 		GoodId:    orderInfo.Id,
 		AddressId: orderInfo.AddressId,
 		UserId:    userInfo.ID,
@@ -75,9 +74,9 @@ func GetOrder(ctx *gin.Context) {
 
 	orderId := ctx.Param("id")
 	fmt.Print(orderId)
-	DB := common.GetDB()
+	DB := database.GetDB()
 
-	var Order model.Order
+	var Order model2.Order
 	err := DB.Where("ID=?", orderId).Find(&Order)
 
 	if err != nil { //应该没有
@@ -127,17 +126,17 @@ func GetFromCart(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"msg": "user not exist"})
 		return
 	}
-	userInfo := user.(model.User)
+	userInfo := user.(model2.User)
 
-	DB := common.GetDB()
+	DB := database.GetDB()
 
 	//获取数据库的相关数据
-	var good model.Goods
+	var good model2.Goods
 	e := DB.Table("goods").Where("id = ?", idStr).Find(&good)
 	if e.Error != nil {
 		fmt.Print(e.Error)
 	}
-	var address []model.UserAddress
+	var address []model2.UserAddress
 	e2 := DB.Table("user_addresses").Where("user_id = ?", userInfo.ID).Find(&address)
 	if e2.Error != nil {
 		fmt.Print(e.Error)
@@ -193,12 +192,12 @@ type summary struct {
 func SoldList(c *gin.Context) {
 
 	user, _ := c.Get("user")
-	userinfo := user.(model.User)
+	userinfo := user.(model2.User)
 	uId := userinfo.ID
-	db := common.GetDB()
+	db := database.GetDB()
 	p, _ := strconv.Atoi(c.Query("page"))
 	ps, _ := strconv.Atoi(c.Query("pageSize"))
-	var gList []model.Goods
+	var gList []model2.Goods
 	if err := db.Table("goods").Where("user = ? AND is_sold = ?", uId, 1).Find(&gList).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(404, gin.H{
@@ -215,7 +214,7 @@ func SoldList(c *gin.Context) {
 		for i, g := range gList {
 			idList[i] = g.ID
 		}
-		var oList []model.Order
+		var oList []model2.Order
 		//如果is sold与order绑定成功这里应该没有错误，为了可读性就不检错了
 		db.Table("orders").Where("good_id IN (?)", idList).Find(&oList)
 		var result []summary
@@ -251,12 +250,12 @@ func SoldList(c *gin.Context) {
 func BoughtList(c *gin.Context) {
 
 	user, _ := c.Get("user")
-	userinfo := user.(model.User)
+	userinfo := user.(model2.User)
 	uId := userinfo.ID
-	db := common.GetDB()
+	db := database.GetDB()
 	p, _ := strconv.Atoi(c.Query("page"))
 	ps, _ := strconv.Atoi(c.Query("pageSize"))
-	var oList []model.Order
+	var oList []model2.Order
 	if err := db.Table("orders").Where("user_id", uId).Find(&oList).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(404, gin.H{
@@ -273,7 +272,7 @@ func BoughtList(c *gin.Context) {
 		for i, o := range oList {
 			idList[i], _ = strconv.Atoi(o.GoodId)
 		}
-		var gList []model.Goods
+		var gList []model2.Goods
 		db.Table("goods").Where("id IN (?)", idList).Find(&gList)
 		var result []summary
 		b := (p - 1) * ps
@@ -319,12 +318,12 @@ type summary2 struct {
 func SaleList(c *gin.Context) {
 
 	user, _ := c.Get("user")
-	userinfo := user.(model.User)
+	userinfo := user.(model2.User)
 	uId := userinfo.ID
-	db := common.GetDB()
+	db := database.GetDB()
 	p, _ := strconv.Atoi(c.Query("page"))
 	ps, _ := strconv.Atoi(c.Query("pageSize"))
-	var gList []model.Goods
+	var gList []model2.Goods
 	if err := db.Table("goods").Where("user = ? AND is_sold = ?", uId, 0).Find(&gList).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(404, gin.H{

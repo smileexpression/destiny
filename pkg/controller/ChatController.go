@@ -1,12 +1,11 @@
 package controller
 
 import (
+	"smile.expression/destiny/pkg/database"
+	model2 "smile.expression/destiny/pkg/database/model"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-
-	"smile.expression/destiny/pkg/common"
-	"smile.expression/destiny/pkg/model"
 )
 
 type ChatDto struct {
@@ -14,7 +13,7 @@ type ChatDto struct {
 	Content string
 }
 
-func ToChatDto(chat model.Chat) ChatDto {
+func ToChatDto(chat model2.Chat) ChatDto {
 	return ChatDto{
 		Type:    chat.Type,
 		Content: chat.Content,
@@ -29,26 +28,26 @@ type single struct {
 }
 
 func GetMsg(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := database.GetDB()
 
 	// 获取当前用户的id
 	user, _ := ctx.Get("user")
-	userinfo := user.(model.User)
+	userinfo := user.(model2.User)
 	id := userinfo.ID
 
-	var chatList []model.ChatList
+	var chatList []model2.ChatList
 	DB.Table("chat_lists").Where("me = ?", id).Find(&chatList)
 
 	var list []single
 	for i := 0; i < len(chatList); i++ {
-		var chat []model.Chat
+		var chat []model2.Chat
 		DB.Table("chats").Where("me = ? and you = ?", id, chatList[i].You).Find(&chat)
 		// fmt.Println(chat)
 		var chatDto []ChatDto
 		for j := 0; j < len(chat); j++ {
 			chatDto = append(chatDto, ToChatDto(chat[j]))
 		}
-		var tempUser model.User
+		var tempUser model2.User
 		DB.Table("users").Where("id = ?", chatList[i].You).First(&tempUser)
 		newSingle := single{Id: chatList[i].You, Nickname: tempUser.Name, Avatar: tempUser.Avatar, Chat: chatDto}
 		list = append(list, newSingle)
@@ -60,18 +59,18 @@ func GetMsg(ctx *gin.Context) {
 }
 
 func SendMsg(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := database.GetDB()
 	user, _ := ctx.Get("user")
-	userinfo := user.(model.User)
+	userinfo := user.(model2.User)
 
-	var chat model.Chat
+	var chat model2.Chat
 	if err := ctx.BindJSON(&chat); err != nil {
 		return
 	}
 
 	chat.Me = strconv.Itoa(int(userinfo.ID))
 	chat.Type = "1"
-	newChat := model.Chat{Me: chat.You, You: chat.Me, Type: "0", Content: chat.Content}
+	newChat := model2.Chat{Me: chat.You, You: chat.Me, Type: "0", Content: chat.Content}
 	DB.Create(&chat)
 	DB.Create(&newChat)
 
@@ -81,11 +80,11 @@ func SendMsg(ctx *gin.Context) {
 }
 
 func AddChat(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := database.GetDB()
 	user, _ := ctx.Get("user")
-	userinfo := user.(model.User)
+	userinfo := user.(model2.User)
 
-	var chatList, check model.ChatList
+	var chatList, check model2.ChatList
 	if err := ctx.BindJSON(&chatList); err != nil {
 		return
 	}
@@ -105,7 +104,7 @@ func AddChat(ctx *gin.Context) {
 	}
 
 	chatList.Me = strconv.Itoa(int(userinfo.ID))
-	newChatList := model.ChatList{Me: chatList.You, You: chatList.Me}
+	newChatList := model2.ChatList{Me: chatList.You, You: chatList.Me}
 	DB.Create(&chatList)
 	DB.Create(&newChatList)
 	ctx.JSON(200, gin.H{

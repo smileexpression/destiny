@@ -6,13 +6,12 @@ import (
 	"fmt"
 	"math/big"
 	"net/http"
+	"smile.expression/destiny/pkg/database"
+	model2 "smile.expression/destiny/pkg/database/model"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-
-	"smile.expression/destiny/pkg/common"
-	"smile.expression/destiny/pkg/model"
 )
 
 type AllIdle struct { // "_2" 区分于commodity controller的AllIdle
@@ -20,30 +19,30 @@ type AllIdle struct { // "_2" 区分于commodity controller的AllIdle
 	Id      string
 	Name    string `gorm:"type:varchar(20);not null"`
 	Picture string `gorm:"type:varchar(1024);not null"`
-	Goods   []model.Goods
+	Goods   []model2.Goods
 }
 
 type SingleIdle struct {
 	Id      string
 	Name    string `gorm:"type:varchar(20);not null"`
 	Picture string `gorm:"type:varchar(1024);not null"`
-	Goods   []model.Goods
+	Goods   []model2.Goods
 }
 
 func GetGoods(ctx *gin.Context) {
 
-	DB := common.GetDB()
+	DB := database.GetDB()
 	var result [4]AllIdle
 
 	for i := 0; i < 4; i++ {
 
-		var category model.Category
+		var category model2.Category
 		DB.Table("categories").Where("id = ?", i+1).Find(&category)
 		result[i].Id = category.Id
 		result[i].Name = category.Name
 		result[i].Picture = category.Picture
 
-		var goods []model.Goods
+		var goods []model2.Goods
 		DB.Table("goods").Where("Cate_Id = ? AND is_sold=?", i+1, false).Find(&goods)
 		result[i].Goods = append(result[i].Goods, goods...)
 	}
@@ -58,10 +57,10 @@ func GetGoods(ctx *gin.Context) {
 //暂且不考虑id转换错误
 
 func GetOneGood(c *gin.Context) {
-	db := common.GetDB()
+	db := database.GetDB()
 	idStr := c.Query("id")
 	id, _ := strconv.ParseInt(idStr, 10, 64)
-	var target model.Goods
+	var target model2.Goods
 	if err := db.Table("goods").Where("id = ?", id).First(&target).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(404, gin.H{
@@ -69,7 +68,7 @@ func GetOneGood(c *gin.Context) {
 			})
 		}
 	} else {
-		var picTarget model.Picture
+		var picTarget model2.Picture
 		if err = db.Table("pictures").Where("good_id = ?", target.ID).First(&picTarget).Error; err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				c.JSON(404, gin.H{
@@ -78,7 +77,7 @@ func GetOneGood(c *gin.Context) {
 			}
 		} else {
 			//用户头像一般不会出错 简化代码不处理
-			var user model.User
+			var user model2.User
 			db.Table("users").First(&user, target.User)
 			p := [5]string{picTarget.Picture1, picTarget.Picture2, picTarget.Picture3, picTarget.Picture4, picTarget.Picture5}
 			c.JSON(200, gin.H{
@@ -92,7 +91,7 @@ func GetOneGood(c *gin.Context) {
 }
 
 func RecentIdle(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := database.GetDB()
 
 	NUM := ctx.DefaultQuery("limit", "4")
 	IntNum, err := strconv.Atoi(NUM)
@@ -106,7 +105,7 @@ func RecentIdle(ctx *gin.Context) {
 	if IntNum > int(count) {
 		IntNum = int(count) //让返回的数目不大于库存
 	}
-	var recentGoods = make([]model.Goods, IntNum)
+	var recentGoods = make([]model2.Goods, IntNum)
 
 	for i := int(count); i > int(count)-IntNum; i-- {
 		DB.Table("goods").Where("id = ? AND is_sold=?", ids[i-1], false).Find(&recentGoods[int(count)-i])
@@ -122,18 +121,18 @@ func RecentIdle(ctx *gin.Context) {
 
 func ChooseCategory(ctx *gin.Context) {
 
-	DB := common.GetDB()
+	DB := database.GetDB()
 	var result SingleIdle
 
 	CateId := ctx.DefaultQuery("id", "3")
 
-	var category model.Category
+	var category model2.Category
 	DB.Table("categories").Where("id = ?", CateId).Find(&category)
 	result.Id = category.Id
 	result.Name = category.Name
 	result.Picture = category.Picture
 
-	var goods []model.Goods
+	var goods []model2.Goods
 	DB.Table("goods").Where("cate_Id = ? AND is_sold=?", CateId, false).Find(&goods)
 	result.Goods = append(result.Goods, goods...)
 
@@ -160,7 +159,7 @@ func Release(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"msg": "user not exist"})
 		return
 	}
-	userInfo := user.(model.User)
+	userInfo := user.(model2.User)
 
 	//绑定body
 	var goodInfo GoodInfo
@@ -171,11 +170,11 @@ func Release(ctx *gin.Context) {
 		return
 	}
 
-	DB := common.GetDB()
+	DB := database.GetDB()
 
 	//生成good
 	userId := strconv.Itoa(int(userInfo.ID)) //之前将good表的User字段定义成了string
-	good := model.Goods{
+	good := model2.Goods{
 		CateId:      goodInfo.CateId,
 		User:        userId, //之前将good表的User字段定义成了string
 		Name:        goodInfo.Name,
@@ -191,7 +190,7 @@ func Release(ctx *gin.Context) {
 
 	//生成good对应的picture
 	goodId := strconv.Itoa(int(good.ID)) //之前将picture表goodId字段定义成了string
-	picture := model.Picture{
+	picture := model2.Picture{
 		GoodId:   goodId,
 		Picture1: goodInfo.Picture[0],
 	}
@@ -253,12 +252,12 @@ type apiGood struct {
 	Picture string `json:"picture"`
 }
 
-func transApiGood(good model.Goods) apiGood {
+func transApiGood(good model2.Goods) apiGood {
 	return apiGood{Id: good.ID, Name: good.Name, Desc: good.Name, Price: good.Price, Picture: good.Picture}
 }
 
 func RecommendGoods(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := database.GetDB()
 	strLimit := ctx.DefaultQuery("limit", "4")
 	intLimit, err := strconv.Atoi(strLimit)
 	if err != nil {
@@ -270,7 +269,7 @@ func RecommendGoods(ctx *gin.Context) {
 	var isNotSoldNum int64
 	DB.Table("goods").Where("is_sold=?", false).Count(&isNotSoldNum)
 	//获得未售出的商品数组，数量为isNotSold_Num
-	var notSoldGoodArray []model.Goods
+	var notSoldGoodArray []model2.Goods
 	DB.Table("goods").Where("is_sold=?", false).Limit(int(isNotSoldNum)).Find(&notSoldGoodArray)
 	println("isNotSold_Num", isNotSoldNum)
 

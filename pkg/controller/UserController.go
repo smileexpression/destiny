@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"smile.expression/destiny/pkg/database"
+	model2 "smile.expression/destiny/pkg/database/model"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +13,6 @@ import (
 	"gorm.io/gorm"
 
 	"smile.expression/destiny/pkg/common"
-	"smile.expression/destiny/pkg/model"
 )
 
 type apiAddress struct {
@@ -24,8 +25,8 @@ type apiAddress struct {
 // Register 注册接口函数
 func Register(ctx *gin.Context) {
 	//获取数据
-	DB := common.GetDB()
-	var receiveUser model.User
+	DB := database.GetDB()
+	var receiveUser model2.User
 	if err := ctx.BindJSON(&receiveUser); err != nil {
 		ctx.JSON(422, gin.H{"code": 422, "msg": "获取失败"})
 		return
@@ -56,7 +57,7 @@ func Register(ctx *gin.Context) {
 	// 	receiveUser.Name = RandomName(10)
 	// }
 
-	newUser := model.User{
+	newUser := model2.User{
 		Gender: receiveUser.Gender,
 		Name:   receiveUser.Name,
 		// Token:     receiveUser.Token,
@@ -89,8 +90,8 @@ func Register(ctx *gin.Context) {
 // Login 登录接口函数
 func Login(ctx *gin.Context) {
 	//获取参数
-	DB := common.GetDB()
-	var receiveUser model.User
+	DB := database.GetDB()
+	var receiveUser model2.User
 	if err := ctx.BindJSON(&receiveUser); err != nil {
 		ctx.JSON(422, gin.H{"code": 422, "msg": "获取失败"})
 		return
@@ -107,7 +108,7 @@ func Login(ctx *gin.Context) {
 	}
 
 	//验证手机号对应的用户是否存在
-	var user model.User
+	var user model2.User
 	DB.Where("telephone = ?", receiveUser.Telephone).First(&user)
 	if user.ID == 0 {
 		ctx.JSON(422, gin.H{"code": 422, "msg": "用户不存在"})
@@ -131,8 +132,8 @@ func Login(ctx *gin.Context) {
 	}
 
 	//获取user对应的所有地址
-	var addressArray []model.UserAddress
-	DB.Model(&model.UserAddress{}).Where("user_id=?", user.ID).Find(&addressArray)
+	var addressArray []model2.UserAddress
+	DB.Model(&model2.UserAddress{}).Where("user_id=?", user.ID).Find(&addressArray)
 
 	//for _, v := range addressArray {
 	//	println("id", v.ID)
@@ -184,28 +185,28 @@ func Login(ctx *gin.Context) {
 
 // 验证手机号是否已被注册
 func isTelephoneExist(db *gorm.DB, telephone string) bool {
-	var user model.User
+	var user model2.User
 	db.Where("telephone = ?", telephone).First(&user)
 	return user.ID != 0
 }
 
 func Info(ctx *gin.Context) {
 	user, _ := ctx.Get("user")
-	userinfo := user.(model.User)
+	userinfo := user.(model2.User)
 	id := userinfo.ID
 	fmt.Println(id)
 	ctx.JSON(http.StatusOK, gin.H{"code": 200, "data": gin.H{"user": user}})
 }
 
 func UpdateAvatar(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := database.GetDB()
 	pictureID, isSuccess := ctx.GetQuery("pictureID")
 	user, isExist := ctx.Get("user")
 	if !isExist {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"msg": "user not exist"})
 		return
 	}
-	userInfo := user.(model.User)
+	userInfo := user.(model2.User)
 	if !isSuccess {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"code": 400,
@@ -237,7 +238,7 @@ type onPassword struct {
 }
 
 func ChangePassword(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := database.GetDB()
 	var receivePassword onPassword
 	if err := ctx.BindJSON(&receivePassword); err != nil {
 		ctx.JSON(422, gin.H{"code": 422, "msg": "获取失败"})
@@ -248,7 +249,7 @@ func ChangePassword(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"msg": "user not exist"})
 		return
 	}
-	userInfo := user.(model.User)
+	userInfo := user.(model2.User)
 
 	//验证新旧密码长度
 	if len(receivePassword.OldPassword) < 6 || len(receivePassword.OldPassword) > 14 {
@@ -290,8 +291,8 @@ func ChangePassword(ctx *gin.Context) {
 }
 
 func ChangeInfo(ctx *gin.Context) {
-	DB := common.GetDB()
-	var receiveInfo model.User
+	DB := database.GetDB()
+	var receiveInfo model2.User
 	if err := ctx.BindJSON(&receiveInfo); err != nil {
 		ctx.JSON(422, gin.H{"code": 422, "msg": "获取失败"})
 		return
@@ -312,7 +313,7 @@ func ChangeInfo(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"msg": "user not exist"})
 		return
 	}
-	userInfo := user.(model.User)
+	userInfo := user.(model2.User)
 
 	if userInfo.Name != newName || userInfo.Gender != newGender {
 		userInfo.Name = newName
@@ -330,8 +331,8 @@ func ChangeInfo(ctx *gin.Context) {
 }
 
 func AddAddress(ctx *gin.Context) {
-	DB := common.GetDB()
-	var receiveAddress model.UserAddress
+	DB := database.GetDB()
+	var receiveAddress model2.UserAddress
 	if err := ctx.BindJSON(&receiveAddress); err != nil {
 		ctx.JSON(422, gin.H{"code": 422, "msg": "获取失败"})
 		return
@@ -350,13 +351,13 @@ func AddAddress(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"msg": "user not exist"})
 		return
 	}
-	userInfo := user.(model.User)
+	userInfo := user.(model2.User)
 	receiveAddress.UserID = userInfo.ID
 
 	DB.Create(&receiveAddress)
 
-	var addressArray []model.UserAddress
-	DB.Model(&model.UserAddress{}).Where("user_id=?", userInfo.ID).Find(&addressArray)
+	var addressArray []model2.UserAddress
+	DB.Model(&model2.UserAddress{}).Where("user_id=?", userInfo.ID).Find(&addressArray)
 
 	//for _, v := range addressArray {
 	//	println("id", v.ID)
@@ -381,7 +382,7 @@ func AddAddress(ctx *gin.Context) {
 }
 
 func DeleteAddress(ctx *gin.Context) {
-	DB := common.GetDB()
+	DB := database.GetDB()
 	addressID, isExist := ctx.GetQuery("id")
 
 	if !isExist {
@@ -404,18 +405,18 @@ func DeleteAddress(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"code": 400, "msg": "user not exist"})
 		return
 	}
-	userInfo := user.(model.User)
+	userInfo := user.(model2.User)
 
-	if err := DB.Where("id = ?", addressID).First(&model.UserAddress{}).Error; errors.Is(err, gorm.ErrRecordNotFound) {
+	if err := DB.Where("id = ?", addressID).First(&model2.UserAddress{}).Error; errors.Is(err, gorm.ErrRecordNotFound) {
 		//记录为空
 		ctx.JSON(http.StatusOK, gin.H{"code": 200, "msg": "该记录不存在"})
 		return
 	}
 
-	DB.Where("id=?", addressID).Delete(&model.UserAddress{})
+	DB.Where("id=?", addressID).Delete(&model2.UserAddress{})
 
-	var addressArray []model.UserAddress
-	DB.Model(&model.UserAddress{}).Where("user_id=?", userInfo.ID).Find(&addressArray)
+	var addressArray []model2.UserAddress
+	DB.Model(&model2.UserAddress{}).Where("user_id=?", userInfo.ID).Find(&addressArray)
 
 	//for _, v := range addressArray {
 	//	println("id", v.ID)

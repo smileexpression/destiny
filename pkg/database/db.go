@@ -1,4 +1,4 @@
-package common
+package database
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
-	"smile.expression/destiny/pkg/model"
+	"smile.expression/destiny/pkg/database/model"
 )
 
 var DB *gorm.DB

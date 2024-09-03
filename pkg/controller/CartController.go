@@ -3,12 +3,11 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"smile.expression/destiny/pkg/database"
+	model2 "smile.expression/destiny/pkg/database/model"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-
-	"smile.expression/destiny/pkg/common"
-	"smile.expression/destiny/pkg/model"
 )
 
 type CartGoods struct {
@@ -32,10 +31,10 @@ type goodID struct {
 
 func CartIn(c *gin.Context) {
 	user, _ := c.Get("user")
-	userinfo := user.(model.User)
+	userinfo := user.(model2.User)
 	uId := userinfo.ID
 	fmt.Println("uId: ", uId)
-	db := common.GetDB()
+	db := database.GetDB()
 	var gID goodID
 	if err := c.BindJSON(&gID); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -50,7 +49,7 @@ func CartIn(c *gin.Context) {
 		// 不存在相同的数据，插入新数据
 		var mId uint
 		db.Table("carts").Select("COALESCE(MAX(id),0)").Scan(&mId)
-		var re model.Cart
+		var re model2.Cart
 		re.ID = mId + 1
 		re.UserId = strconv.Itoa(int(uId))
 		re.GoodId = gID.GID
@@ -80,9 +79,9 @@ func CartIn(c *gin.Context) {
 
 func CartDel(c *gin.Context) {
 	user, _ := c.Get("user")
-	userinfo := user.(model.User)
+	userinfo := user.(model2.User)
 	uId := userinfo.ID
-	db := common.GetDB()
+	db := database.GetDB()
 	var gIds goodIDs
 	if err := c.BindJSON(&gIds); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -102,7 +101,7 @@ func CartDel(c *gin.Context) {
 			})
 		} else {
 			tx := db.Begin()
-			if err := tx.Table("carts").Unscoped().Where("user_id = ? AND  good_id= ?", uId, id).Delete(&model.Cart{}).Error; err != nil {
+			if err := tx.Table("carts").Unscoped().Where("user_id = ? AND  good_id= ?", uId, id).Delete(&model2.Cart{}).Error; err != nil {
 				// 处理错误
 				tx.Rollback()
 			}
@@ -120,9 +119,9 @@ func CartDel(c *gin.Context) {
 // CartDelOne 该函数使用query传递单个参数
 func CartDelOne(c *gin.Context) {
 	user, _ := c.Get("user")
-	userinfo := user.(model.User)
+	userinfo := user.(model2.User)
 	uId := userinfo.ID
-	db := common.GetDB()
+	db := database.GetDB()
 	gId := c.Query("id")
 
 	var count int64
@@ -135,7 +134,7 @@ func CartDelOne(c *gin.Context) {
 		})
 	} else {
 		tx := db.Begin()
-		if err := tx.Table("carts").Unscoped().Where("user_id = ? AND  good_id= ?", uId, gId).Delete(&model.Cart{}).Error; err != nil {
+		if err := tx.Table("carts").Unscoped().Where("user_id = ? AND  good_id= ?", uId, gId).Delete(&model2.Cart{}).Error; err != nil {
 			// 处理错误
 			tx.Rollback()
 		}
@@ -152,9 +151,9 @@ func CartDelOne(c *gin.Context) {
 
 func CartOut(c *gin.Context) {
 	user, _ := c.Get("user")
-	userinfo := user.(model.User)
+	userinfo := user.(model2.User)
 	uId := userinfo.ID
-	db := common.GetDB()
+	db := database.GetDB()
 
 	var result []CartGoods
 	err := db.Table("carts").Joins("left join goods ON carts.good_id = goods.id").Where("carts.user_id = ?", uId).Scan(&result)

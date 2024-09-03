@@ -2,14 +2,13 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-
-	"smile.expression/destiny/pkg/common"
-	"smile.expression/destiny/pkg/model"
+	"smile.expression/destiny/pkg/database"
+	"smile.expression/destiny/pkg/database/model"
 )
 
 func GetBanner(ctx *gin.Context) {
 
-	DB := common.GetDB()
+	DB := database.GetDB()
 	var banners []model.Banner
 	DB.Find(&banners)
 
