@@ -2,19 +2,20 @@ package controller
 
 import (
 	"crypto/rand"
+	"errors"
 	"fmt"
 	"math/big"
 	"net/http"
-	"smile.expression/destiny/common"
-	"smile.expression/destiny/model"
 	"strconv"
 
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"github.com/gin-gonic/gin"
+	"smile.expression/destiny/common"
+	"smile.expression/destiny/model"
 )
 
-type AllIdle struct { // "_2" 区分于commoditycontroller的AllIdle
+type AllIdle struct { // "_2" 区分于commodity controller的AllIdle
 
 	Id      string
 	Name    string `gorm:"type:varchar(20);not null"`
@@ -62,15 +63,15 @@ func GetOneGood(c *gin.Context) {
 	id, _ := strconv.ParseInt(idStr, 10, 64)
 	var target model.Goods
 	if err := db.Table("goods").Where("id = ?", id).First(&target).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(404, gin.H{
 				"err warning": "Record of good no found",
 			})
 		}
 	} else {
 		var picTarget model.Picture
-		if err := db.Table("pictures").Where("good_id = ?", target.ID).First(&picTarget).Error; err != nil {
-			if err == gorm.ErrRecordNotFound {
+		if err = db.Table("pictures").Where("good_id = ?", target.ID).First(&picTarget).Error; err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
 				c.JSON(404, gin.H{
 					"err warning": "There is a error in pictures database,please contact the administrator",
 				})
@@ -94,7 +95,7 @@ func RecentIdle(ctx *gin.Context) {
 	DB := common.GetDB()
 
 	NUM := ctx.DefaultQuery("limit", "4")
-	IntNum, err := strconv.Atoi(NUM) // 函数原型 ：func Atoi(s string) (int, error)
+	IntNum, err := strconv.Atoi(NUM)
 	if err != nil {
 		print(err)
 		//do not thing
@@ -108,7 +109,6 @@ func RecentIdle(ctx *gin.Context) {
 	var recentGoods = make([]model.Goods, IntNum)
 
 	for i := int(count); i > int(count)-IntNum; i-- {
-		print(int(count)-i, "fenge", i, "\n")
 		DB.Table("goods").Where("id = ? AND is_sold=?", ids[i-1], false).Find(&recentGoods[int(count)-i])
 	}
 
@@ -125,16 +125,16 @@ func ChooseCategory(ctx *gin.Context) {
 	DB := common.GetDB()
 	var result SingleIdle
 
-	Cate_id := ctx.DefaultQuery("id", "3")
+	CateId := ctx.DefaultQuery("id", "3")
 
 	var category model.Category
-	DB.Table("categories").Where("id = ?", Cate_id).Find(&category)
+	DB.Table("categories").Where("id = ?", CateId).Find(&category)
 	result.Id = category.Id
 	result.Name = category.Name
 	result.Picture = category.Picture
 
 	var goods []model.Goods
-	DB.Table("goods").Where("cate_Id = ? AND is_sold=?", Cate_id, false).Find(&goods)
+	DB.Table("goods").Where("cate_Id = ? AND is_sold=?", CateId, false).Find(&goods)
 	result.Goods = append(result.Goods, goods...)
 
 	ctx.JSON(200, gin.H{
@@ -147,7 +147,7 @@ func ChooseCategory(ctx *gin.Context) {
 
 type GoodInfo struct { //用于接收body参数
 	Name        string   `json:"name"`
-	Cate_id     string   `json:"cate_id"`
+	CateId      string   `json:"cate_id"`
 	Description string   `json:"description"`
 	Picture     []string `json:"picture"`
 	Price       string   `json:"price"`
@@ -155,8 +155,8 @@ type GoodInfo struct { //用于接收body参数
 
 func Release(ctx *gin.Context) {
 
-	user, is_Exist := ctx.Get("user")
-	if !is_Exist {
+	user, isExist := ctx.Get("user")
+	if !isExist {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"msg": "user not exist"})
 		return
 	}
@@ -176,13 +176,13 @@ func Release(ctx *gin.Context) {
 	//生成good
 	userId := strconv.Itoa(int(userInfo.ID)) //之前将good表的User字段定义成了string
 	good := model.Goods{
-		Cate_Id:     goodInfo.Cate_id,
+		CateId:      goodInfo.CateId,
 		User:        userId, //之前将good表的User字段定义成了string
 		Name:        goodInfo.Name,
 		Picture:     goodInfo.Picture[0],
 		Price:       goodInfo.Price,
 		Description: goodInfo.Description,
-		Is_Sold:     false,
+		IsSold:      false,
 	}
 	if err := DB.Create(&good).Error; err != nil {
 		fmt.Println("插入失败", err)
@@ -259,20 +259,20 @@ func transApiGood(good model.Goods) apiGood {
 
 func RecommendGoods(ctx *gin.Context) {
 	DB := common.GetDB()
-	str_limit := ctx.DefaultQuery("limit", "4")
-	int_limit, err := strconv.Atoi(str_limit) // 函数原型 ：func Atoi(s string) (int, error)
+	strLimit := ctx.DefaultQuery("limit", "4")
+	intLimit, err := strconv.Atoi(strLimit)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get limit"})
 		return
 	}
 
 	//未售出商品数量
-	var isNotSold_Num int64
-	DB.Table("goods").Where("is_sold=?", false).Count(&isNotSold_Num)
+	var isNotSoldNum int64
+	DB.Table("goods").Where("is_sold=?", false).Count(&isNotSoldNum)
 	//获得未售出的商品数组，数量为isNotSold_Num
-	var notSoldGood_Array []model.Goods
-	DB.Table("goods").Where("is_sold=?", false).Limit(int(isNotSold_Num)).Find(&notSoldGood_Array)
-	println("isNotSold_Num", isNotSold_Num)
+	var notSoldGoodArray []model.Goods
+	DB.Table("goods").Where("is_sold=?", false).Limit(int(isNotSoldNum)).Find(&notSoldGoodArray)
+	println("isNotSold_Num", isNotSoldNum)
 
 	//打印未售出的商品数组
 	//println("notSoldGood_Array:")
@@ -281,7 +281,7 @@ func RecommendGoods(ctx *gin.Context) {
 	//}
 
 	//通过比较获得最终展出商品的数量
-	times := minNum(int_limit, int(isNotSold_Num))
+	times := minNum(intLimit, int(isNotSoldNum))
 	result := make([]apiGood, times)
 	//记录已随机抽取商品的id
 	var idRecord = make([]uint, times)
@@ -292,15 +292,14 @@ func RecommendGoods(ctx *gin.Context) {
 	for i := 0; i < times; i++ {
 		for {
 			//随机抽取一个index,范围[0,total)
-			ranIndex, _ := rand.Int(rand.Reader, big.NewInt(isNotSold_Num))
+			ranIndex, _ := rand.Int(rand.Reader, big.NewInt(isNotSoldNum))
 			//println("ranIndex=", ranIndex.Int64())
 			index := uint(ranIndex.Int64())
-			//str_ranID := strconv.Itoa(id)
-			id := notSoldGood_Array[index].ID
+			id := notSoldGoodArray[index].ID
 			if checkRanID(idRecord, id) {
 				idRecord[i] = id
-				notSoldGood_Array[index].Is_Sold = true
-				result[i] = transApiGood(notSoldGood_Array[index])
+				notSoldGoodArray[index].IsSold = true
+				result[i] = transApiGood(notSoldGoodArray[index])
 				break
 			}
 		}

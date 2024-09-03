@@ -48,9 +48,9 @@ func GetMsg(ctx *gin.Context) {
 		for j := 0; j < len(chat); j++ {
 			chatDto = append(chatDto, ToChatDto(chat[j]))
 		}
-		var temp_user model.User
-		DB.Table("users").Where("id = ?", chatList[i].You).First(&temp_user)
-		newSingle := single{Id: chatList[i].You, Nickname: temp_user.Name, Avatar: temp_user.Avatar, Chat: chatDto}
+		var tempUser model.User
+		DB.Table("users").Where("id = ?", chatList[i].You).First(&tempUser)
+		newSingle := single{Id: chatList[i].You, Nickname: tempUser.Name, Avatar: tempUser.Avatar, Chat: chatDto}
 		list = append(list, newSingle)
 	}
 
@@ -65,7 +65,9 @@ func SendMsg(ctx *gin.Context) {
 	userinfo := user.(model.User)
 
 	var chat model.Chat
-	ctx.BindJSON(&chat)
+	if err := ctx.BindJSON(&chat); err != nil {
+		return
+	}
 
 	chat.Me = strconv.Itoa(int(userinfo.ID))
 	chat.Type = "1"
@@ -84,7 +86,9 @@ func AddChat(ctx *gin.Context) {
 	userinfo := user.(model.User)
 
 	var chatList, check model.ChatList
-	ctx.BindJSON(&chatList)
+	if err := ctx.BindJSON(&chatList); err != nil {
+		return
+	}
 	// 将string转为uint
 	if chatList.You == strconv.Itoa(int(userinfo.ID)) {
 		ctx.JSON(200, gin.H{

@@ -4,8 +4,8 @@ import "gorm.io/gorm"
 
 type Order struct {
 	gorm.Model // ID gen update del
-	Good_Id    string
+	GoodId     string
 	AddressId  string
-	User_Id    uint
+	UserId     uint
 	PayMoney   int
 }

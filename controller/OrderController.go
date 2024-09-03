@@ -1,14 +1,16 @@
 package controller
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
-	"smile.expression/destiny/common"
-	"smile.expression/destiny/model"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+
+	"smile.expression/destiny/common"
+	"smile.expression/destiny/model"
 )
 
 type OrderInfo struct {
@@ -18,8 +20,8 @@ type OrderInfo struct {
 
 func CreateOrder(ctx *gin.Context) {
 
-	user, is_Exist := ctx.Get("user")
-	if !is_Exist {
+	user, isExist := ctx.Get("user")
+	if !isExist {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"msg": "user not exist"})
 		return
 	}
@@ -38,7 +40,7 @@ func CreateOrder(ctx *gin.Context) {
 	var good model.Goods
 	DB := common.GetDB()
 	DB.Where("ID=?", orderInfo.Id).Find(&good)
-	if good.Is_Sold {
+	if good.IsSold {
 		ctx.JSON(200, gin.H{
 			"code": "0",
 			"msg":  "手速太慢，商品被抢",
@@ -49,9 +51,9 @@ func CreateOrder(ctx *gin.Context) {
 	pMoney, _ := strconv.Atoi(good.Price)   //商品的价格为string，订单pay为int（字段类型）
 
 	order := model.Order{
-		Good_Id:   orderInfo.Id,
+		GoodId:    orderInfo.Id,
 		AddressId: orderInfo.AddressId,
-		User_Id:   userInfo.ID,
+		UserId:    userInfo.ID,
 		PayMoney:  pMoney,
 	}
 	if err := DB.Create(&order).Error; err != nil {
@@ -120,8 +122,8 @@ func GetFromCart(ctx *gin.Context) {
 
 	idStr := ctx.Query("goodID")
 
-	user, is_Exist := ctx.Get("user")
-	if !is_Exist {
+	user, isExist := ctx.Get("user")
+	if !isExist {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"msg": "user not exist"})
 		return
 	}
@@ -196,26 +198,26 @@ func SoldList(c *gin.Context) {
 	db := common.GetDB()
 	p, _ := strconv.Atoi(c.Query("page"))
 	ps, _ := strconv.Atoi(c.Query("pageSize"))
-	var glist []model.Goods
-	if err := db.Table("goods").Where("user = ? AND is_sold = ?", uId, 1).Find(&glist).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+	var gList []model.Goods
+	if err := db.Table("goods").Where("user = ? AND is_sold = ?", uId, 1).Find(&gList).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(404, gin.H{
 				"err warning": "Record of good no found",
 			})
 		} else {
 			c.JSON(500, gin.H{
-				"error warning": "unknow error",
+				"error warning": "unknown error",
 			})
 		}
 	} else {
-		count := len(glist)
-		idlist := make([]uint, count)
-		for i, g := range glist {
-			idlist[i] = g.ID
+		count := len(gList)
+		idList := make([]uint, count)
+		for i, g := range gList {
+			idList[i] = g.ID
 		}
-		var olist []model.Order
-		//如果issold与order绑定成功这里应该没有错误，为了可读性就不检错了
-		db.Table("orders").Where("good_id IN (?)", idlist).Find(&olist)
+		var oList []model.Order
+		//如果is sold与order绑定成功这里应该没有错误，为了可读性就不检错了
+		db.Table("orders").Where("good_id IN (?)", idList).Find(&oList)
 		var result []summary
 		b := (p - 1) * ps
 		e := b + ps
@@ -227,14 +229,14 @@ func SoldList(c *gin.Context) {
 		} else {
 			for i := b; (i < count) && (i < e); i++ {
 				var r summary
-				r.Id = olist[i].ID
-				r.CreatTime = olist[i].CreatedAt.Format("2006-01-02 15:04:05")
-				r.Skus.Id = glist[i].ID
-				r.Skus.Name = glist[i].Name
-				r.Skus.Image = glist[i].Picture
-				r.Skus.AttrsText = glist[i].Description
-				r.Skus.RealPay, _ = strconv.ParseFloat(glist[i].Price, 64)
-				r.PayMoney, _ = strconv.ParseFloat(glist[i].Price, 64)
+				r.Id = oList[i].ID
+				r.CreatTime = oList[i].CreatedAt.Format("2006-01-02 15:04:05")
+				r.Skus.Id = gList[i].ID
+				r.Skus.Name = gList[i].Name
+				r.Skus.Image = gList[i].Picture
+				r.Skus.AttrsText = gList[i].Description
+				r.Skus.RealPay, _ = strconv.ParseFloat(gList[i].Price, 64)
+				r.PayMoney, _ = strconv.ParseFloat(gList[i].Price, 64)
 				result = append(result, r)
 			}
 			c.JSON(200, gin.H{
@@ -254,25 +256,25 @@ func BoughtList(c *gin.Context) {
 	db := common.GetDB()
 	p, _ := strconv.Atoi(c.Query("page"))
 	ps, _ := strconv.Atoi(c.Query("pageSize"))
-	var olist []model.Order
-	if err := db.Table("orders").Where("user_id", uId).Find(&olist).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+	var oList []model.Order
+	if err := db.Table("orders").Where("user_id", uId).Find(&oList).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(404, gin.H{
 				"err warning": "Record of good no found",
 			})
 		} else {
 			c.JSON(500, gin.H{
-				"error warning": "unknow error",
+				"error warning": "unknown error",
 			})
 		}
 	} else {
-		count := len(olist)
-		idlist := make([]int, count)
-		for i, o := range olist {
-			idlist[i], _ = strconv.Atoi(o.Good_Id)
+		count := len(oList)
+		idList := make([]int, count)
+		for i, o := range oList {
+			idList[i], _ = strconv.Atoi(o.GoodId)
 		}
-		var glist []model.Goods
-		db.Table("goods").Where("id IN (?)", idlist).Find(&glist)
+		var gList []model.Goods
+		db.Table("goods").Where("id IN (?)", idList).Find(&gList)
 		var result []summary
 		b := (p - 1) * ps
 		println(b)
@@ -287,14 +289,14 @@ func BoughtList(c *gin.Context) {
 			for i := b; (i < count) && (i < e); i++ {
 				println("循环开始：", i)
 				var r summary
-				r.Id = olist[i].ID
-				r.CreatTime = olist[i].CreatedAt.Format("2006-01-02 15:04:05")
-				r.Skus.Id = glist[i].ID
-				r.Skus.Name = glist[i].Name
-				r.Skus.Image = glist[i].Picture
-				r.Skus.AttrsText = glist[i].Description
-				r.Skus.RealPay, _ = strconv.ParseFloat(glist[i].Price, 64)
-				r.PayMoney, _ = strconv.ParseFloat(glist[i].Price, 64)
+				r.Id = oList[i].ID
+				r.CreatTime = oList[i].CreatedAt.Format("2006-01-02 15:04:05")
+				r.Skus.Id = gList[i].ID
+				r.Skus.Name = gList[i].Name
+				r.Skus.Image = gList[i].Picture
+				r.Skus.AttrsText = gList[i].Description
+				r.Skus.RealPay, _ = strconv.ParseFloat(gList[i].Price, 64)
+				r.PayMoney, _ = strconv.ParseFloat(gList[i].Price, 64)
 				result = append(result, r)
 				println(" 循环结束：", i)
 
@@ -322,19 +324,19 @@ func SaleList(c *gin.Context) {
 	db := common.GetDB()
 	p, _ := strconv.Atoi(c.Query("page"))
 	ps, _ := strconv.Atoi(c.Query("pageSize"))
-	var glist []model.Goods
-	if err := db.Table("goods").Where("user = ? AND is_sold = ?", uId, 0).Find(&glist).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+	var gList []model.Goods
+	if err := db.Table("goods").Where("user = ? AND is_sold = ?", uId, 0).Find(&gList).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(404, gin.H{
 				"err warning": "Record of good no found",
 			})
 		} else {
 			c.JSON(500, gin.H{
-				"error warning": "unknow error",
+				"error warning": "unknown error",
 			})
 		}
 	} else {
-		count := len(glist)
+		count := len(gList)
 		var result []summary2
 		b := (p - 1) * ps
 		e := b + ps
@@ -346,12 +348,12 @@ func SaleList(c *gin.Context) {
 		} else {
 			for i := b; (i < count) && (i < e); i++ {
 				var r summary2
-				r.CreatTime = glist[i].CreatedAt.Format("2006-01-02 15:04:05")
-				r.Skus.Id = glist[i].ID
-				r.Skus.Name = glist[i].Name
-				r.Skus.Image = glist[i].Picture
-				r.Skus.AttrsText = glist[i].Description
-				r.Skus.RealPay, _ = strconv.ParseFloat(glist[i].Price, 64)
+				r.CreatTime = gList[i].CreatedAt.Format("2006-01-02 15:04:05")
+				r.Skus.Id = gList[i].ID
+				r.Skus.Name = gList[i].Name
+				r.Skus.Image = gList[i].Picture
+				r.Skus.AttrsText = gList[i].Description
+				r.Skus.RealPay, _ = strconv.ParseFloat(gList[i].Price, 64)
 				result = append(result, r)
 			}
 			c.JSON(200, gin.H{

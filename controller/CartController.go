@@ -52,8 +52,8 @@ func CartIn(c *gin.Context) {
 		db.Table("carts").Select("COALESCE(MAX(id),0)").Scan(&mId)
 		var re model.Cart
 		re.ID = mId + 1
-		re.User_id = strconv.Itoa(int(uId))
-		re.Good_id = gID.GID
+		re.UserId = strconv.Itoa(int(uId))
+		re.GoodId = gID.GID
 		tx := db.Begin()
 
 		if err := tx.Table("carts").Create(&re).Error; err != nil {

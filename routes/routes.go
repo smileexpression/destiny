@@ -1,10 +1,10 @@
 package routes
 
 import (
+	"github.com/gin-gonic/gin"
+
 	"smile.expression/destiny/controller"
 	"smile.expression/destiny/middleware"
-
-	"github.com/gin-gonic/gin"
 )
 
 func CollectRoute(r *gin.Engine) *gin.Engine {
@@ -31,15 +31,14 @@ func CollectRoute(r *gin.Engine) *gin.Engine {
 		member.GET("/order/:id", middleware.AuthMiddleware(), controller.GetOrder)
 		member.POST("/release", middleware.AuthMiddleware(), controller.Release)
 		member.GET("/order/pre", middleware.AuthMiddleware(), controller.GetFromCart)
-		member.POST("/updateavatar", middleware.AuthMiddleware(), controller.UpdateAvatar)
-		member.POST("/changepassword", middleware.AuthMiddleware(), controller.ChangePassword)
-		member.POST("/changeinfo", middleware.AuthMiddleware(), controller.ChangeInfo)
-		member.POST("/addaddress", middleware.AuthMiddleware(), controller.AddAddress)
-		member.POST("/deladdress", middleware.AuthMiddleware(), controller.DeleteAddress)
-		member.GET("/soldorder", middleware.AuthMiddleware(), controller.SoldList)
-		member.GET("/getorder", middleware.AuthMiddleware(), controller.BoughtList)
+		member.POST("/update_avatar", middleware.AuthMiddleware(), controller.UpdateAvatar)
+		member.POST("/change_password", middleware.AuthMiddleware(), controller.ChangePassword)
+		member.POST("/change_info", middleware.AuthMiddleware(), controller.ChangeInfo)
+		member.POST("/add_address", middleware.AuthMiddleware(), controller.AddAddress)
+		member.POST("/del_address", middleware.AuthMiddleware(), controller.DeleteAddress)
+		member.GET("/sold_order", middleware.AuthMiddleware(), controller.SoldList)
+		member.GET("/get_order", middleware.AuthMiddleware(), controller.BoughtList)
 		member.GET("/remain", middleware.AuthMiddleware(), controller.SaleList)
-
 	}
 
 	goods := r.Group("")
@@ -50,9 +49,9 @@ func CollectRoute(r *gin.Engine) *gin.Engine {
 
 	chatList := r.Group("chat")
 	{
-		chatList.GET("/getmsg", middleware.AuthMiddleware(), controller.GetMsg)
-		chatList.POST("/sendmsg", middleware.AuthMiddleware(), controller.SendMsg)
-		chatList.POST("/addchat", middleware.AuthMiddleware(), controller.AddChat)
+		chatList.GET("/get_msg", middleware.AuthMiddleware(), controller.GetMsg)
+		chatList.POST("/send_msg", middleware.AuthMiddleware(), controller.SendMsg)
+		chatList.POST("/add_chat", middleware.AuthMiddleware(), controller.AddChat)
 	}
 
 	//member路由完善后可以将下面这个路由整合

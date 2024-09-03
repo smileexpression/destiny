@@ -2,16 +2,17 @@ package middleware
 
 import (
 	"net/http"
-	"smile.expression/destiny/common"
-	"smile.expression/destiny/model"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+
+	"smile.expression/destiny/common"
+	"smile.expression/destiny/model"
 )
 
 func AuthMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		//获取anthorization header
+		//获取authorization header
 		tokenString := ctx.GetHeader("Authorization")
 		//验证token格式
 		if tokenString == "" || !strings.HasPrefix(tokenString, "Bearer ") {
