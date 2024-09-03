@@ -33,7 +33,7 @@ func InitDB() *gorm.DB {
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic("Error to Db connection, err: " + err.Error())
+		panic("Error to DB connection, err: " + err.Error())
 	}
 	_ = db.AutoMigrate(&model.User{}) // 此处创建了model文件夹下的user实体类，仅作参考
 	_ = db.AutoMigrate(&model.Goods{})
