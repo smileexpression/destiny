@@ -1,19 +1,15 @@
 package controller
 
 import (
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
-	"smile.expression/destiny/common"
-	"smile.expression/destiny/model"
 
 	"github.com/gin-gonic/gin"
-)
 
-// type Image struct {
-// 	ID   uint `gorm:"primarykey"`
-// 	Blob []byte
-// }
+	"smile.expression/destiny/common"
+	"smile.expression/destiny/model"
+)
 
 func HandleUpload(c *gin.Context) {
 	db := common.GetDB()
@@ -37,12 +33,16 @@ func HandleUpload(c *gin.Context) {
 				log.Println("Error opening uploaded file:", err)
 				continue
 			}
-			defer file.Close()
-			// 使用ioutil.ReadAll()读取文件内容
-			blob, err := ioutil.ReadAll(file)
+
+			// 使用io.ReadAll()读取文件内容
+			blob, err := io.ReadAll(file)
 			if err != nil {
 				log.Println("Error reading uploaded file:", err)
 				continue
+			}
+
+			if err = file.Close(); err != nil {
+				return
 			}
 
 			// 创建一个新的model.Image结构体，将文件内容存储在Blob字段中
