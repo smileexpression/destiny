@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"gin/common"
-	"gin/model"
+	"destiny/common"
+	"destiny/model"
 	"net/http"
 	"strings"
 

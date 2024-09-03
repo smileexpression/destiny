@@ -1,8 +1,8 @@
 package common
 
 import (
-	"gin/model"
-	"github.com/dgrijalva/jwt-go"
+	"destiny/model"
+	"github.com/golang-jwt/jwt"
 	"time"
 )
 

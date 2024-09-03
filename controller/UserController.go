@@ -1,9 +1,9 @@
 package controller
 
 import (
+	"destiny/common"
+	"destiny/model"
 	"fmt"
-	"gin/common"
-	"gin/model"
 	"net/http"
 	"strconv"
 

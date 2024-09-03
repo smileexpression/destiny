@@ -1,8 +1,8 @@
 package main
 
 import (
-	"gin/common"
-	"gin/routes"
+	"destiny/common"
+	"destiny/routes"
 	"os"
 
 	"github.com/gin-gonic/gin"

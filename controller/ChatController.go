@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"gin/common"
-	"gin/model"
+	"destiny/common"
+	"destiny/model"
 	"strconv"
 
 	"github.com/gin-gonic/gin"

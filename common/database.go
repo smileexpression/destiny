@@ -1,8 +1,8 @@
 package common
 
 import (
+	"destiny/model"
 	"fmt"
-	"gin/model"
 	"net/url"
 
 	"github.com/spf13/viper"

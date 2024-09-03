@@ -2,9 +2,9 @@ package controller
 
 import (
 	"crypto/rand"
+	"destiny/common"
+	"destiny/model"
 	"fmt"
-	"gin/common"
-	"gin/model"
 	"math/big"
 	"net/http"
 	"strconv"

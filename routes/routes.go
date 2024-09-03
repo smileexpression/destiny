@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"gin/controller"
-	"gin/middleware"
+	"destiny/controller"
+	"destiny/middleware"
 
 	"github.com/gin-gonic/gin"
 )
