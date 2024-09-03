@@ -22,8 +22,13 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	defer func(file *os.File) {
+		if err = file.Close(); err != nil {
+			panic(err)
+		}
+	}(file)
 
 	Logger.SetOutput(file) // 将日志输出到文件
 
-	Logger.Info("Log initialized")
+	Logger.Info("log initialized")
 }

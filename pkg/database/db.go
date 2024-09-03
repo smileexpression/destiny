@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
@@ -13,23 +12,27 @@ import (
 
 var DB *gorm.DB
 
-func InitDB() *gorm.DB {
+type Options struct {
+	Database string `json:"database"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Host     string `json:"host"`
+	Port     int    `json:"port"`
+	Charset  string `json:"charset"`
+	Loc      string `json:"loc"`
+}
+
+func NewDB(options *Options) *gorm.DB {
 	//可以用navicat或datagrip等数据库操作软件，利用下面的信息登录数据库查看数据
-	host := viper.GetString("datasource.host")
-	port := viper.GetString("datasource.port")
-	database := viper.GetString("datasource.database")
-	username := viper.GetString("datasource.username")
-	password := viper.GetString("datasource.password")
-	charset := viper.GetString("datasource.charset")
-	loc := viper.GetString("datasource.loc")
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=true&loc=%s",
-		username,
-		password,
-		host,
-		port,
-		database,
-		charset,
-		url.QueryEscape(loc))
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=true&loc=%s",
+		options.Username,
+		options.Password,
+		options.Host,
+		options.Port,
+		options.Database,
+		options.Charset,
+		url.QueryEscape(options.Loc),
+	)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {

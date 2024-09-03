@@ -1,18 +1,18 @@
 package main
 
 import (
-	"os"
-	"smile.expression/destiny/pkg/database"
-
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 
+	_ "smile.expression/destiny/log"
+	"smile.expression/destiny/pkg/app"
 	"smile.expression/destiny/pkg/routes"
 )
 
 func main() {
-	InitConfig()
-	database.InitDB()
+	application := &app.App{}
+	application.Init()
+
 	r := gin.Default()
 	r = routes.CollectRoute(r)
 
@@ -21,15 +21,4 @@ func main() {
 		panic(r.Run(":" + port))
 	}
 	panic(r.Run())
-}
-
-func InitConfig() {
-	workDir, _ := os.Getwd()
-	viper.SetConfigName("application")
-	viper.SetConfigType("yml")
-	viper.AddConfigPath(workDir + "/config")
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic(err)
-	}
 }
