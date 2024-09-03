@@ -1,10 +1,10 @@
 package controller
 
 import (
+	"github.com/gin-gonic/gin"
+
 	"smile.expression/destiny/common"
 	"smile.expression/destiny/model"
-
-	"github.com/gin-gonic/gin"
 )
 
 func GetBanner(ctx *gin.Context) {

@@ -1,9 +1,11 @@
 package common
 
 import (
-	"github.com/golang-jwt/jwt"
-	"smile.expression/destiny/model"
 	"time"
+
+	"github.com/golang-jwt/jwt"
+
+	"smile.expression/destiny/model"
 )
 
 var jwtKey = []byte("a_secret_crect")

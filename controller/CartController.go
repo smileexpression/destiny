@@ -3,41 +3,41 @@ package controller
 import (
 	"fmt"
 	"net/http"
-	"smile.expression/destiny/common"
-	"smile.expression/destiny/model"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+
+	"smile.expression/destiny/common"
+	"smile.expression/destiny/model"
 )
 
 type CartGoods struct {
 	Id          string `json:"id"`
-	Cate_Id     string
+	CateId      string
 	User        string `json:"user" gorm:"type:varchar(255);not null"`
 	Name        string `json:"name" gorm:"type:varchar(50);not null"`
 	Picture     string `json:"picture" gorm:"type:varchar(1024);not null"`
 	Price       string `json:"price" gorm:"type:float;not null"`
 	Description string `json:"desc" gorm:"type:varchar(255);not null"`
-	Is_Sold     bool   `json:"forsale"`
+	IsSold      bool   `json:"is_sold"`
 }
 
-type goodids struct {
-	Gids []string `json:"ids"`
+type goodIDs struct {
+	GIDs []string `json:"ids"`
 }
 
-type goodid struct {
-	Gid string `json:"id"`
+type goodID struct {
+	GID string `json:"id"`
 }
 
 func CartIn(c *gin.Context) {
-
 	user, _ := c.Get("user")
 	userinfo := user.(model.User)
 	uId := userinfo.ID
 	fmt.Println("uId: ", uId)
 	db := common.GetDB()
-	var gId goodid
-	if err := c.BindJSON(&gId); err != nil {
+	var gID goodID
+	if err := c.BindJSON(&gID); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
@@ -45,7 +45,7 @@ func CartIn(c *gin.Context) {
 	}
 	// 查询是否存在相同的数据
 	var count int64
-	db.Table("carts").Where("user_id = ? AND  good_id= ?", uId, gId).Count(&count)
+	db.Table("carts").Where("user_id = ? AND  good_id= ?", uId, gID).Count(&count)
 	if count == 0 {
 		// 不存在相同的数据，插入新数据
 		var mId uint
@@ -53,7 +53,7 @@ func CartIn(c *gin.Context) {
 		var re model.Cart
 		re.ID = mId + 1
 		re.User_id = strconv.Itoa(int(uId))
-		re.Good_id = gId.Gid
+		re.Good_id = gID.GID
 		tx := db.Begin()
 
 		if err := tx.Table("carts").Create(&re).Error; err != nil {
@@ -71,7 +71,7 @@ func CartIn(c *gin.Context) {
 		// 存在相同的数据，不插入新数据
 		c.JSON(200, gin.H{
 			"code":   "0",
-			"result": "flase",
+			"result": false,
 			"msg":    "已经加入购物车",
 		})
 	}
@@ -83,7 +83,7 @@ func CartDel(c *gin.Context) {
 	userinfo := user.(model.User)
 	uId := userinfo.ID
 	db := common.GetDB()
-	var gIds goodids
+	var gIds goodIDs
 	if err := c.BindJSON(&gIds); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -91,13 +91,13 @@ func CartDel(c *gin.Context) {
 		return
 	}
 
-	for _, id := range gIds.Gids {
+	for _, id := range gIds.GIDs {
 		var count int64
 		db.Table("carts").Where("user_id = ? AND  good_id= ?", uId, id).Count(&count)
 		if count == 0 {
 			c.JSON(200, gin.H{
 				"code":   "0",
-				"result": "flase",
+				"result": false,
 				"msg":    "商品不在购物车内",
 			})
 		} else {
@@ -110,7 +110,7 @@ func CartDel(c *gin.Context) {
 			//有必要可以先查询验证
 			c.JSON(200, gin.H{
 				"code":   "1",
-				"result": "true",
+				"result": true,
 				"msg":    "已删除",
 			})
 		}
@@ -130,7 +130,7 @@ func CartDelOne(c *gin.Context) {
 	if count == 0 {
 		c.JSON(200, gin.H{
 			"code":   "0",
-			"result": "flase",
+			"result": false,
 			"msg":    "商品不在购物车内",
 		})
 	} else {
