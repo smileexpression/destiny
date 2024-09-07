@@ -1,4 +1,4 @@
-package log
+package logger
 
 import (
 	"os"
@@ -18,7 +18,7 @@ func init() {
 	Logger.SetLevel(logrus.InfoLevel)
 
 	// 添加一个输出目标，比如 os.Stdout
-	file, err := os.OpenFile("log/logfile.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	file, err := os.OpenFile("logger/logfile.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		panic(err)
 	}

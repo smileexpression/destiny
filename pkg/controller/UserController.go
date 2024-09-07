@@ -4,16 +4,35 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"smile.expression/destiny/pkg/database"
-	model2 "smile.expression/destiny/pkg/database/model"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 
+	"smile.expression/destiny/logger"
 	"smile.expression/destiny/pkg/common"
+	"smile.expression/destiny/pkg/database"
+	"smile.expression/destiny/pkg/database/model"
+	"smile.expression/destiny/pkg/middleware"
 )
+
+type UserController struct {
+	db *gorm.DB
+}
+
+func NewUserController(db *gorm.DB) *UserController {
+	return &UserController{
+		db: db,
+	}
+}
+
+func (u *UserController) Register(r *gin.Engine) {
+	r.Use(middleware.CORSMiddleware(), middleware.RecoveryMiddleware())
+	rg := r.Group("/api/v1/user")
+
+	rg.POST("/register", u.register)
+}
 
 type apiAddress struct {
 	AddressID string `json:"id"`
@@ -22,13 +41,18 @@ type apiAddress struct {
 	Address   string `json:"address"`
 }
 
-// Register 注册接口函数
-func Register(ctx *gin.Context) {
+// register 注册接口函数
+func (u *UserController) register(ctx *gin.Context) {
 	//获取数据
-	DB := database.GetDB()
-	var receiveUser model2.User
+	var (
+		ctx0 = ctx.Request.Context()
+		log  = logger.Logger.WithContext(ctx0)
+	)
+
+	var receiveUser model.User
 	if err := ctx.BindJSON(&receiveUser); err != nil {
-		ctx.JSON(422, gin.H{"code": 422, "msg": "获取失败"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"msg": "获取失败"})
+		log.WithError(err).Error()
 		return
 	}
 	//账号密码基本数据长度验证
@@ -42,7 +66,7 @@ func Register(ctx *gin.Context) {
 	}
 
 	//验证手机号是否被注册过
-	if isTelephoneExist(DB, receiveUser.Telephone) {
+	if isTelephoneExist(u.db, receiveUser.Telephone) {
 		ctx.JSON(422, gin.H{"code": 422, "msg": "该手机号已被注册"})
 		return
 	}
@@ -57,7 +81,7 @@ func Register(ctx *gin.Context) {
 	// 	receiveUser.Name = RandomName(10)
 	// }
 
-	newUser := model2.User{
+	newUser := model.User{
 		Gender: receiveUser.Gender,
 		Name:   receiveUser.Name,
 		// Token:     receiveUser.Token,
@@ -65,7 +89,7 @@ func Register(ctx *gin.Context) {
 		Password:  string(HashPassword),
 		Avatar:    "1",
 	}
-	DB.Create(&newUser)
+	u.db.Create(&newUser)
 
 	//发放Token
 	token, err := common.ReleaseToken(newUser)
@@ -91,7 +115,7 @@ func Register(ctx *gin.Context) {
 func Login(ctx *gin.Context) {
 	//获取参数
 	DB := database.GetDB()
-	var receiveUser model2.User
+	var receiveUser model.User
 	if err := ctx.BindJSON(&receiveUser); err != nil {
 		ctx.JSON(422, gin.H{"code": 422, "msg": "获取失败"})
 		return
@@ -108,7 +132,7 @@ func Login(ctx *gin.Context) {
 	}
 
 	//验证手机号对应的用户是否存在
-	var user model2.User
+	var user model.User
 	DB.Where("telephone = ?", receiveUser.Telephone).First(&user)
 	if user.ID == 0 {
 		ctx.JSON(422, gin.H{"code": 422, "msg": "用户不存在"})
@@ -132,8 +156,8 @@ func Login(ctx *gin.Context) {
 	}
 
 	//获取user对应的所有地址
-	var addressArray []model2.UserAddress
-	DB.Model(&model2.UserAddress{}).Where("user_id=?", user.ID).Find(&addressArray)
+	var addressArray []model.UserAddress
+	DB.Model(&model.UserAddress{}).Where("user_id=?", user.ID).Find(&addressArray)
 
 	//for _, v := range addressArray {
 	//	println("id", v.ID)
@@ -185,14 +209,14 @@ func Login(ctx *gin.Context) {
 
 // 验证手机号是否已被注册
 func isTelephoneExist(db *gorm.DB, telephone string) bool {
-	var user model2.User
+	var user model.User
 	db.Where("telephone = ?", telephone).First(&user)
 	return user.ID != 0
 }
 
 func Info(ctx *gin.Context) {
 	user, _ := ctx.Get("user")
-	userinfo := user.(model2.User)
+	userinfo := user.(model.User)
 	id := userinfo.ID
 	fmt.Println(id)
 	ctx.JSON(http.StatusOK, gin.H{"code": 200, "data": gin.H{"user": user}})
@@ -206,7 +230,7 @@ func UpdateAvatar(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"msg": "user not exist"})
 		return
 	}
-	userInfo := user.(model2.User)
+	userInfo := user.(model.User)
 	if !isSuccess {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"code": 400,
@@ -249,7 +273,7 @@ func ChangePassword(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"msg": "user not exist"})
 		return
 	}
-	userInfo := user.(model2.User)
+	userInfo := user.(model.User)
 
 	//验证新旧密码长度
 	if len(receivePassword.OldPassword) < 6 || len(receivePassword.OldPassword) > 14 {
@@ -292,7 +316,7 @@ func ChangePassword(ctx *gin.Context) {
 
 func ChangeInfo(ctx *gin.Context) {
 	DB := database.GetDB()
-	var receiveInfo model2.User
+	var receiveInfo model.User
 	if err := ctx.BindJSON(&receiveInfo); err != nil {
 		ctx.JSON(422, gin.H{"code": 422, "msg": "获取失败"})
 		return
@@ -313,7 +337,7 @@ func ChangeInfo(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"msg": "user not exist"})
 		return
 	}
-	userInfo := user.(model2.User)
+	userInfo := user.(model.User)
 
 	if userInfo.Name != newName || userInfo.Gender != newGender {
 		userInfo.Name = newName
@@ -332,7 +356,7 @@ func ChangeInfo(ctx *gin.Context) {
 
 func AddAddress(ctx *gin.Context) {
 	DB := database.GetDB()
-	var receiveAddress model2.UserAddress
+	var receiveAddress model.UserAddress
 	if err := ctx.BindJSON(&receiveAddress); err != nil {
 		ctx.JSON(422, gin.H{"code": 422, "msg": "获取失败"})
 		return
@@ -351,13 +375,13 @@ func AddAddress(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"msg": "user not exist"})
 		return
 	}
-	userInfo := user.(model2.User)
+	userInfo := user.(model.User)
 	receiveAddress.UserID = userInfo.ID
 
 	DB.Create(&receiveAddress)
 
-	var addressArray []model2.UserAddress
-	DB.Model(&model2.UserAddress{}).Where("user_id=?", userInfo.ID).Find(&addressArray)
+	var addressArray []model.UserAddress
+	DB.Model(&model.UserAddress{}).Where("user_id=?", userInfo.ID).Find(&addressArray)
 
 	//for _, v := range addressArray {
 	//	println("id", v.ID)
@@ -405,18 +429,18 @@ func DeleteAddress(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"code": 400, "msg": "user not exist"})
 		return
 	}
-	userInfo := user.(model2.User)
+	userInfo := user.(model.User)
 
-	if err := DB.Where("id = ?", addressID).First(&model2.UserAddress{}).Error; errors.Is(err, gorm.ErrRecordNotFound) {
+	if err := DB.Where("id = ?", addressID).First(&model.UserAddress{}).Error; errors.Is(err, gorm.ErrRecordNotFound) {
 		//记录为空
 		ctx.JSON(http.StatusOK, gin.H{"code": 200, "msg": "该记录不存在"})
 		return
 	}
 
-	DB.Where("id=?", addressID).Delete(&model2.UserAddress{})
+	DB.Where("id=?", addressID).Delete(&model.UserAddress{})
 
-	var addressArray []model2.UserAddress
-	DB.Model(&model2.UserAddress{}).Where("user_id=?", userInfo.ID).Find(&addressArray)
+	var addressArray []model.UserAddress
+	DB.Model(&model.UserAddress{}).Where("user_id=?", userInfo.ID).Find(&addressArray)
 
 	//for _, v := range addressArray {
 	//	println("id", v.ID)

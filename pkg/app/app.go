@@ -1,18 +1,24 @@
 package app
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
+	"gorm.io/gorm"
 
-	"smile.expression/destiny/log"
+	"smile.expression/destiny/logger"
+	"smile.expression/destiny/pkg/controller"
 	"smile.expression/destiny/pkg/database"
+	"smile.expression/destiny/pkg/routes"
 )
 
 type App struct {
-	options *Options
+	options        *Options
+	r              *gin.Engine
+	db             *gorm.DB
+	userController *controller.UserController
 }
 
 type Options struct {
@@ -37,17 +43,23 @@ func (a *App) Init() {
 }
 
 func (a *App) serve() {
-	db := database.NewDB(a.options.DBOptions)
-	fmt.Println(db)
+	a.r = gin.Default()
+	a.db = database.NewDB(a.options.DBOptions)
+
+	a.userController = controller.NewUserController(a.db)
+	a.userController.Register(a.r)
+
+	a.r = routes.CollectRoute(a.r)
+	panic(a.r.Run(":" + viper.GetString("server.port")))
 }
 
 func (a *App) initOrUpdateConfig() {
 	// 读取配置文件
 	if err := viper.ReadInConfig(); err != nil {
-		log.Logger.WithError(err).Error("read config failed")
+		logger.Logger.WithError(err).Error("read config failed")
 	}
 
 	if err := viper.Unmarshal(&a.options); err != nil {
-		log.Logger.WithError(err).Error("unmarshal config file error")
+		logger.Logger.WithError(err).Error("unmarshal config file error")
 	}
 }

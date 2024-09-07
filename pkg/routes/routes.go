@@ -15,7 +15,7 @@ func CollectRoute(r *gin.Engine) *gin.Engine {
 	}
 
 	r.POST("/login", controller.Login)
-	r.POST("/register", controller.Register)
+	//r.POST("/register", controller.register)
 	r.GET("/info", middleware.AuthMiddleware(), controller.Info)
 
 	home := r.Group("home")
