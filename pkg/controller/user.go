@@ -43,39 +43,47 @@ type apiAddress struct {
 
 // register 注册接口函数
 func (u *UserController) register(ctx *gin.Context) {
-	//获取数据
 	var (
 		ctx0 = ctx.Request.Context()
 		log  = logger.Logger.WithContext(ctx0)
 	)
 
+	//获取数据
 	var receiveUser model.User
 	if err := ctx.BindJSON(&receiveUser); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"msg": "获取失败"})
 		log.WithError(err).Error()
+		ctx.JSON(http.StatusBadRequest, gin.H{"msg": "获取失败"})
 		return
 	}
+
 	//账号密码基本数据长度验证
 	if len(receiveUser.Telephone) != 11 {
-		ctx.JSON(422, gin.H{"code": 422, "msg": "手机号必须为11位"})
+		log.Errorf("invalid telephone number: %s", receiveUser.Telephone)
+		ctx.JSON(http.StatusBadRequest, gin.H{"msg": "手机号必须为11位"})
 		return
 	}
+
 	if len(receiveUser.Password) < 6 || len(receiveUser.Password) > 14 {
-		ctx.JSON(422, gin.H{"code": 422, "msg": "密码长度需要设置为6-14个字符"})
+		log.Errorf("invalid password: %s", receiveUser.Password)
+		ctx.JSON(http.StatusBadRequest, gin.H{"msg": "密码长度需要设置为6-14个字符"})
 		return
 	}
 
 	//验证手机号是否被注册过
-	if isTelephoneExist(u.db, receiveUser.Telephone) {
-		ctx.JSON(422, gin.H{"code": 422, "msg": "该手机号已被注册"})
+	if u.isTelephoneExist(receiveUser.Telephone) {
+		log.Errorf("invalid telephone number: %s", receiveUser.Telephone)
+		ctx.JSON(http.StatusBadRequest, gin.H{"msg": "该手机号已被注册"})
 		return
 	}
+
 	//对密码进行加密处理
-	HashPassword, err := bcrypt.GenerateFromPassword([]byte(receiveUser.Password), bcrypt.DefaultCost)
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(receiveUser.Password), bcrypt.DefaultCost)
 	if err != nil {
-		ctx.JSON(500, gin.H{"code": 500, "msg": "加密错误"})
+		log.WithError(err).Error()
+		ctx.JSON(http.StatusInternalServerError, gin.H{"msg": "服务出错"})
 		return
 	}
+
 	// 如果名称为空，随机创建一个名称
 	// if len(receiveUser.Name) == 0 {
 	// 	receiveUser.Name = RandomName(10)
@@ -86,7 +94,7 @@ func (u *UserController) register(ctx *gin.Context) {
 		Name:   receiveUser.Name,
 		// Token:     receiveUser.Token,
 		Telephone: receiveUser.Telephone,
-		Password:  string(HashPassword),
+		Password:  string(hashPassword),
 		Avatar:    "1",
 	}
 	u.db.Create(&newUser)
@@ -208,9 +216,9 @@ func Login(ctx *gin.Context) {
 }
 
 // 验证手机号是否已被注册
-func isTelephoneExist(db *gorm.DB, telephone string) bool {
+func (u *UserController) isTelephoneExist(telephone string) bool {
 	var user model.User
-	db.Where("telephone = ?", telephone).First(&user)
+	u.db.Where("telephone = ?", telephone).First(&user)
 	return user.ID != 0
 }
 
