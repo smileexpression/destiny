@@ -2,27 +2,52 @@ package controller
 
 import (
 	"io"
-	"log"
 	"net/http"
-	"smile.expression/destiny/pkg/database"
-	"smile.expression/destiny/pkg/database/model"
 
 	"github.com/gin-gonic/gin"
+	"github.com/minio/minio-go/v7"
+	"gorm.io/gorm"
+
+	"smile.expression/destiny/logger"
+	"smile.expression/destiny/pkg/database"
+	"smile.expression/destiny/pkg/database/model"
+	"smile.expression/destiny/pkg/middleware"
 )
 
-func HandleUpload(c *gin.Context) {
-	db := database.GetDB()
+type StorageController struct {
+	db            *gorm.DB
+	storageClient *minio.Client
+}
 
+func NewStorageController(db *gorm.DB, storageClient *minio.Client) *StorageController {
+	return &StorageController{
+		db:            db,
+		storageClient: storageClient,
+	}
+}
+
+func (s *StorageController) Register(r *gin.Engine) {
+	r.Use(middleware.CORSMiddleware(), middleware.RecoveryMiddleware())
+	rg := r.Group("/storage")
+
+	rg.POST("/upload", s.upload)
+}
+
+func (s *StorageController) upload(c *gin.Context) {
+	var (
+		ctx0 = c.Request.Context()
+		log  = logger.Logger.WithContext(ctx0)
+	)
 	// 使用c.MultipartForm()从上下文中检索多部分表单数据
 	form, err := c.MultipartForm()
 	if err != nil {
+		log.WithError(err).Error()
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	// 初始化一个空的图像ID切片，以跟踪成功上传的图像的ID
 	var imageIds []uint
-
 	// 循环遍历多部分表单数据中的所有文件头
 	for _, fileHeaders := range form.File {
 		for _, fileHeader := range fileHeaders {
@@ -34,7 +59,7 @@ func HandleUpload(c *gin.Context) {
 			}
 
 			// 使用io.ReadAll()读取文件内容
-			blob, err := io.ReadAll(file)
+			content, err := io.ReadAll(file)
 			if err != nil {
 				log.Println("Error reading uploaded file:", err)
 				continue
@@ -45,8 +70,8 @@ func HandleUpload(c *gin.Context) {
 			}
 
 			// 创建一个新的model.Image结构体，将文件内容存储在Blob字段中
-			dbImage := model.Image{Blob: blob}
-			err = db.Create(&dbImage).Error
+			dbImage := model.Image{Blob: content}
+			err = s.db.Create(&dbImage).Error
 			if err != nil {
 				log.Println("Error creating image record:", err)
 				continue

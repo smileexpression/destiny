@@ -12,17 +12,20 @@ import (
 	"smile.expression/destiny/pkg/controller"
 	"smile.expression/destiny/pkg/database"
 	"smile.expression/destiny/pkg/routes"
+	"smile.expression/destiny/pkg/storage"
 )
 
 type App struct {
 	options        *Options
 	r              *gin.Engine
 	db             *gorm.DB
+	storageClient  *storage.Client
 	userController *controller.UserController
 }
 
 type Options struct {
-	DBOptions *database.Options `json:"dbOptions"`
+	DBOptions      *database.Options `json:"dbOptions"`
+	StorageOptions *storage.Options  `json:"storageOptions"`
 }
 
 func (a *App) Init() {
@@ -48,6 +51,8 @@ func (a *App) serve() {
 
 	a.userController = controller.NewUserController(a.db)
 	a.userController.Register(a.r)
+
+	a.storageClient = storage.NewClient(a.options.StorageOptions)
 
 	a.r = routes.CollectRoute(a.r)
 	panic(a.r.Run(":" + viper.GetString("server.port")))

@@ -63,12 +63,12 @@ func CollectRoute(r *gin.Engine) *gin.Engine {
 		CartGroup.DELETE("/del2", middleware.AuthMiddleware(), controller.CartDelOne)
 	}
 
-	imageRoutes := r.Group("/image")
-	{
-		imageRoutes.POST("/upload", controller.HandleUpload)
-		imageRoutes.GET("/get", controller.HandleImage)
-		imageRoutes.POST("/delete", controller.DeleteImage)
-	}
+	//imageRoutes := r.Group("/image")
+	//{
+	//	imageRoutes.POST("/upload", controller.upload)
+	//	imageRoutes.GET("/get", controller.HandleImage)
+	//	imageRoutes.POST("/delete", controller.DeleteImage)
+	//}
 
 	return r
 }
