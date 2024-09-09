@@ -1,11 +1,13 @@
 package controller
 
 import (
-	"io"
+	"github.com/minio/minio-go/v7"
+	"mime/multipart"
 	"net/http"
+	"smile.expression/destiny/pkg/constant"
+	"smile.expression/destiny/pkg/storage"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minio/minio-go/v7"
 	"gorm.io/gorm"
 
 	"smile.expression/destiny/logger"
@@ -15,22 +17,25 @@ import (
 )
 
 type StorageController struct {
+	r             *gin.Engine
 	db            *gorm.DB
-	storageClient *minio.Client
+	storageClient *storage.Client
 }
 
-func NewStorageController(db *gorm.DB, storageClient *minio.Client) *StorageController {
+func NewStorageController(r *gin.Engine, db *gorm.DB, storageClient *storage.Client) *StorageController {
 	return &StorageController{
+		r:             r,
 		db:            db,
 		storageClient: storageClient,
 	}
 }
 
-func (s *StorageController) Register(r *gin.Engine) {
-	r.Use(middleware.CORSMiddleware(), middleware.RecoveryMiddleware())
-	rg := r.Group("/storage")
+func (s *StorageController) Register() {
+	s.r.Use(middleware.CORSMiddleware(), middleware.RecoveryMiddleware())
 
-	rg.POST("/upload", s.upload)
+	rg := s.r.Group("/api/v1/storage")
+
+	rg.PUT("/upload", s.upload)
 }
 
 func (s *StorageController) upload(c *gin.Context) {
@@ -38,50 +43,33 @@ func (s *StorageController) upload(c *gin.Context) {
 		ctx0 = c.Request.Context()
 		log  = logger.Logger.WithContext(ctx0)
 	)
-	// 使用c.MultipartForm()从上下文中检索多部分表单数据
-	form, err := c.MultipartForm()
+
+	file, err := c.FormFile("file")
 	if err != nil {
-		log.WithError(err).Error()
+		log.WithError(err).Error("error getting file from form")
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
 	}
 
-	// 初始化一个空的图像ID切片，以跟踪成功上传的图像的ID
-	var imageIds []uint
-	// 循环遍历多部分表单数据中的所有文件头
-	for _, fileHeaders := range form.File {
-		for _, fileHeader := range fileHeaders {
-			// 对于每个文件头，使用fileHeader.Open()打开文件
-			file, err := fileHeader.Open()
-			if err != nil {
-				log.Println("Error opening uploaded file:", err)
-				continue
-			}
-
-			// 使用io.ReadAll()读取文件内容
-			content, err := io.ReadAll(file)
-			if err != nil {
-				log.Println("Error reading uploaded file:", err)
-				continue
-			}
-
-			if err = file.Close(); err != nil {
-				return
-			}
-
-			// 创建一个新的model.Image结构体，将文件内容存储在Blob字段中
-			dbImage := model.Image{Blob: content}
-			err = s.db.Create(&dbImage).Error
-			if err != nil {
-				log.Println("Error creating image record:", err)
-				continue
-			}
-
-			// 将成功上传的图像ID添加到imageIds切片中
-			imageIds = append(imageIds, dbImage.ID)
+	content, err := file.Open()
+	if err != nil {
+		log.WithError(err).Error("error opening file")
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+	defer func(content multipart.File) {
+		if err = content.Close(); err != nil {
+			log.WithError(err).Error("error closing file")
 		}
+	}(content)
+
+	resp, err := s.storageClient.PutObject(ctx0, "picture", file.Filename, content, file.Size, minio.PutObjectOptions{
+		ContentType: file.Header.Get(constant.ContentType),
+	})
+	if err != nil {
+		log.WithError(err).Error("error uploading file")
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
-	c.JSON(http.StatusOK, gin.H{"imageIds": imageIds})
+
+	c.JSON(http.StatusOK, gin.H{"result": resp})
 }
 
 func HandleImage(c *gin.Context) {

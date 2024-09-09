@@ -9,18 +9,19 @@ import (
 	"gorm.io/gorm"
 
 	"smile.expression/destiny/logger"
-	"smile.expression/destiny/pkg/controller"
 	"smile.expression/destiny/pkg/database"
+	"smile.expression/destiny/pkg/http/controller"
 	"smile.expression/destiny/pkg/routes"
 	"smile.expression/destiny/pkg/storage"
 )
 
 type App struct {
-	options        *Options
-	r              *gin.Engine
-	db             *gorm.DB
-	storageClient  *storage.Client
-	userController *controller.UserController
+	options           *Options
+	r                 *gin.Engine
+	db                *gorm.DB
+	storageClient     *storage.Client
+	userController    *controller.UserController
+	storageController *controller.StorageController
 }
 
 type Options struct {
@@ -49,10 +50,13 @@ func (a *App) serve() {
 	a.r = gin.Default()
 	a.db = database.NewDB(a.options.DBOptions)
 
+	a.storageClient = storage.NewClient(a.options.StorageOptions)
+
+	// controller
 	a.userController = controller.NewUserController(a.db)
 	a.userController.Register(a.r)
-
-	a.storageClient = storage.NewClient(a.options.StorageOptions)
+	a.storageController = controller.NewStorageController(a.r, a.db, a.storageClient)
+	a.storageController.Register()
 
 	a.r = routes.CollectRoute(a.r)
 	panic(a.r.Run(":" + viper.GetString("server.port")))

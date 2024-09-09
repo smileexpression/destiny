@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+
 	"smile.expression/destiny/pkg/database"
 	"smile.expression/destiny/pkg/database/model"
 )
