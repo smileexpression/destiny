@@ -67,7 +67,7 @@ func CollectRoute(r *gin.Engine) *gin.Engine {
 	//{
 	//	imageRoutes.POST("/upload", controller.upload)
 	//	imageRoutes.GET("/get", controller.HandleImage)
-	//	imageRoutes.POST("/delete", controller.DeleteImage)
+	//	imageRoutes.POST("/delete", controller.removeObject)
 	//}
 
 	return r

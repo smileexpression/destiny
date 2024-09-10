@@ -112,3 +112,8 @@
 {"X-Request-ID":"b1aac492-7e90-4e1e-b2ff-4396b99ebc46","level":"info","msg":"uploading file 头像.jpg","time":"2024-09-10T12:09:19+08:00"}
 {"X-Request-ID":"b1aac492-7e90-4e1e-b2ff-4396b99ebc46","bucket":"picture","level":"info","msg":"PutObject success","object":"头像.jpg","route":"PutObject","size":50515,"time":"2024-09-10T12:09:19+08:00"}
 {"level":"info","msg":"closing log file","time":"2024-09-10T12:09:29+08:00"}
+{"level":"info","msg":"log initialized","time":"2024-09-10T12:51:07+08:00"}
+{"level":"info","msg":"closing log file","time":"2024-09-10T12:51:31+08:00"}
+{"level":"info","msg":"log initialized","time":"2024-09-10T12:51:53+08:00"}
+{"X-Request-ID":"e1068101-a04e-44fc-b9e3-353c532fcc08","bucket":"picture","level":"info","msg":"RemoveObject success","object":"头像.jpg","route":"RemoveObject","time":"2024-09-10T12:54:48+08:00"}
+{"level":"info","msg":"closing log file","time":"2024-09-10T12:56:11+08:00"}

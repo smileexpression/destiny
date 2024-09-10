@@ -80,3 +80,22 @@ func (c *Client) PutObject(ctx context.Context, bucketName string, objectName st
 		Size: info.Size,
 	}, nil
 }
+
+func (c *Client) RemoveObject(ctx context.Context, bucketName string, objectName string, opts minio.RemoveObjectOptions) error {
+	var (
+		log = logger.SmileLog.WithContext(ctx).WithFields(logrus.Fields{
+			constant.Route:  constant.RemoveObject,
+			constant.Bucket: bucketName,
+			constant.Object: objectName,
+		})
+	)
+
+	err := c.client.RemoveObject(ctx, bucketName, objectName, opts)
+	if err != nil {
+		log.WithError(err).Error("RemoveObject fail")
+		return err
+	}
+	log.Info("RemoveObject success")
+
+	return nil
+}

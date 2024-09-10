@@ -6,7 +6,8 @@ const (
 
 	Route = "route"
 
-	PutObject = "PutObject"
+	PutObject    = "PutObject"
+	RemoveObject = "RemoveObject"
 
 	Bucket = "bucket"
 	Object = "object"

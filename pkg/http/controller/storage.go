@@ -1,8 +1,11 @@
 package controller
 
 import (
+	"fmt"
 	"mime/multipart"
 	"net/http"
+	"net/url"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go/v7"
@@ -12,6 +15,7 @@ import (
 	"smile.expression/destiny/pkg/constant"
 	"smile.expression/destiny/pkg/database"
 	"smile.expression/destiny/pkg/database/model"
+	"smile.expression/destiny/pkg/http/api"
 	"smile.expression/destiny/pkg/http/middleware"
 	"smile.expression/destiny/pkg/storage"
 )
@@ -36,6 +40,7 @@ func (s *StorageController) Register() {
 	rg := s.r.Group("/api/v1/storage")
 
 	rg.PUT("/upload", s.upload)
+	rg.DELETE("/remove", s.remove)
 }
 
 func (s *StorageController) upload(c *gin.Context) {
@@ -96,9 +101,43 @@ func HandleImage(c *gin.Context) {
 	c.Data(http.StatusOK, "image/jpeg", image.Blob)
 }
 
-func DeleteImage(c *gin.Context) {
-	db := database.GetDB()
-	id := c.Query("id")
-	db.Where("id = ?", id).Delete(&model.Image{})
-	c.JSON(http.StatusOK, gin.H{"message": "image deleted"})
+func (s *StorageController) remove(c *gin.Context) {
+	var (
+		ctx0 = c.Request.Context()
+		log  = logger.SmileLog.WithContext(ctx0)
+	)
+
+	var req api.RemoveObjectRequest
+	if err := c.BindJSON(&req); err != nil {
+		log.WithError(err).Error("error parsing request")
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+
+	bucketName, objectName, err := parseURL(req.URL)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+
+	if err = s.storageClient.RemoveObject(ctx0, bucketName, objectName, minio.RemoveObjectOptions{}); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
+
+	c.JSON(http.StatusOK, gin.H{"result": "ok"})
+}
+
+func parseURL(fileURL string) (string, string, error) {
+	parsedURL, err := url.Parse(fileURL)
+	if err != nil {
+		return "", "", err
+	}
+
+	// 解析路径，例如 "/my-bucket/my-file.txt"
+	path := strings.TrimPrefix(parsedURL.Path, "/")
+	parts := strings.SplitN(path, "/", 2)
+
+	if len(parts) != 2 {
+		return "", "", fmt.Errorf("invalid URL format")
+	}
+
+	return parts[0], parts[1], nil
 }

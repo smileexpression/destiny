@@ -51,15 +51,12 @@ func NewLogger() *SmileLogger {
 
 	logger.SetOutput(file) // 将日志输出到文件
 
-	logger.Info("log initialized")
-
 	// 监听终止信号，执行清理操作
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-c
 		// 在收到终止信号时关闭文件
-		logger.Info("closing log file")
 		if err = file.Close(); err != nil {
 			panic(err)
 		}
