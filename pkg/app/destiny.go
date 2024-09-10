@@ -24,6 +24,7 @@ type App struct {
 	userController    *controller.UserController
 	storageController *controller.StorageController
 	bannerController  *controller.BannerController
+	goodsController   *controller.GoodsController
 }
 
 type Options struct {
@@ -64,6 +65,8 @@ func (a *App) serve() {
 	a.storageController.Register()
 	a.bannerController = controller.NewBannerController(a.r, a.db)
 	a.bannerController.Register()
+	a.goodsController = controller.NewGoodsController(a.r, a.db)
+	a.goodsController.Register()
 
 	a.r = routes.CollectRoute(a.r)
 	panic(a.r.Run(":" + viper.GetString("server.port")))

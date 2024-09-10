@@ -30,7 +30,7 @@ func NewUserController(r *gin.Engine, db *gorm.DB) *UserController {
 }
 
 func (u *UserController) Register() {
-	rg := u.r.Group("/api/v1/user")
+	rg := u.r.Group("/user")
 
 	rg.POST("/register", u.register)
 }

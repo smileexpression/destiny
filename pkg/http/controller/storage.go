@@ -34,7 +34,7 @@ func NewStorageController(r *gin.Engine, db *gorm.DB, storageClient *storage.Cli
 }
 
 func (s *StorageController) Register() {
-	rg := s.r.Group("/api/v1/storage")
+	rg := s.r.Group("/storage")
 
 	rg.PUT("/upload", s.upload)
 	rg.DELETE("/remove", s.remove)

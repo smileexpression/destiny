@@ -7,7 +7,6 @@ import (
 	"gorm.io/gorm"
 
 	"smile.expression/destiny/logger"
-	"smile.expression/destiny/pkg/database"
 	"smile.expression/destiny/pkg/database/model"
 )
 
@@ -24,7 +23,7 @@ func NewBannerController(r *gin.Engine, db *gorm.DB) *BannerController {
 }
 
 func (b *BannerController) Register() {
-	rg := b.r.Group("/api/v1/home")
+	rg := b.r.Group("/home")
 
 	rg.GET("/banner", b.getBanners)
 }
@@ -44,18 +43,4 @@ func (b *BannerController) getBanners(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"result": banners,
 	})
-}
-
-func GetBanner(ctx *gin.Context) {
-
-	DB := database.GetDB()
-	var banners []model.Banner
-	DB.Find(&banners)
-
-	ctx.JSON(200, gin.H{
-		"code":   "1",
-		"msg":    "获取轮播图数据成功",
-		"result": banners,
-	})
-
 }

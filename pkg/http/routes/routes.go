@@ -21,7 +21,7 @@ func CollectRoute(r *gin.Engine) *gin.Engine {
 	{
 		home.GET("/goods", controller.GetGoods)
 		//home.GET("/banner", controller.GetBanner)
-		home.GET("/new", controller.RecentIdle)
+		//home.GET("/new", controller.recent)
 
 	}
 	member := r.Group("member")
