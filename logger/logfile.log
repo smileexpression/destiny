@@ -156,3 +156,25 @@
 {"X-Request-ID":"4e797c73-8d47-48b5-b8fb-44eb2b78c517","level":"info","msg":"get cache success","time":"2024-09-10T17:07:15+08:00"}
 {"X-Request-ID":"c534f981-5a31-4294-b5fa-76930fcdec25","error":"redis: nil","level":"info","msg":"cache miss","time":"2024-09-10T17:07:28+08:00"}
 {"X-Request-ID":"c534f981-5a31-4294-b5fa-76930fcdec25","level":"info","msg":"set cache success","time":"2024-09-10T17:07:40+08:00"}
+{"X-Request-ID":"61a5a626-a1e6-480f-bb75-5ce82418f5d3","error":"redis: nil","level":"info","msg":"cache miss","time":"2024-09-10T18:07:45+08:00"}
+{"X-Request-ID":"1e721805-3dbd-43c0-8d2b-1f5093a15b94","error":"redis: nil","level":"info","msg":"cache miss","time":"2024-09-10T18:22:57+08:00"}
+{"X-Request-ID":"1e721805-3dbd-43c0-8d2b-1f5093a15b94","level":"info","msg":"set cache success","time":"2024-09-10T18:23:02+08:00"}
+{"X-Request-ID":"e0c2f770-502b-4f1e-8b2b-a2c1805b9c10","level":"info","msg":"get cache success","time":"2024-09-10T18:23:24+08:00"}
+{"X-Request-ID":"504702ed-ad7a-45bb-a9fe-ead0faface29","level":"info","msg":"get cache success","time":"2024-09-10T18:23:40+08:00"}
+{"X-Request-ID":"660a998c-6146-4f2c-af3c-b3d61a3b5c3f","level":"info","msg":"get cache success","time":"2024-09-10T18:23:41+08:00"}
+{"X-Request-ID":"38975e81-c194-46ab-9143-9da396c3f727","level":"info","msg":"get cache success","time":"2024-09-10T18:23:42+08:00"}
+{"X-Request-ID":"62e9400e-a23f-41f2-815d-049678794dc0","level":"info","msg":"get cache success","time":"2024-09-10T18:23:43+08:00"}
+{"X-Request-ID":"97c6b19d-2f6c-4238-b224-74f4eafaf5cd","level":"info","msg":"get cache success","time":"2024-09-10T18:23:43+08:00"}
+{"X-Request-ID":"f56c78d7-673c-4407-8e90-465ac8a2d4a8","level":"info","msg":"get cache success","time":"2024-09-10T18:23:44+08:00"}
+{"X-Request-ID":"67c00e67-f8f7-43e5-9ee7-ea691600c019","level":"info","msg":"get cache success","time":"2024-09-10T18:23:45+08:00"}
+{"X-Request-ID":"18e51fab-034a-40d3-b6d9-e068ba855d1f","level":"info","msg":"get cache success","time":"2024-09-10T18:23:45+08:00"}
+{"X-Request-ID":"a724be3c-73cb-4b31-b0e5-a362cb837f51","error":"redis: nil","level":"info","msg":"cache miss","time":"2024-09-10T18:23:58+08:00"}
+{"X-Request-ID":"a724be3c-73cb-4b31-b0e5-a362cb837f51","level":"info","msg":"set cache success","time":"2024-09-10T18:23:58+08:00"}
+{"X-Request-ID":"deeaa9cf-f4c9-49cc-8339-e5f4068c89c0","level":"info","msg":"get cache success","time":"2024-09-10T18:24:00+08:00"}
+{"X-Request-ID":"8f2acf1b-93d3-41d8-a5ad-4633e3f5ceed","level":"info","msg":"get cache success","time":"2024-09-10T18:24:00+08:00"}
+{"X-Request-ID":"79e892c6-0af5-4677-84df-5c2a320e4625","level":"info","msg":"get cache success","time":"2024-09-10T18:24:01+08:00"}
+{"X-Request-ID":"a19aed3f-bf50-4ef9-b07b-60427fb16baa","level":"info","msg":"get cache success","time":"2024-09-10T18:24:01+08:00"}
+{"X-Request-ID":"7c5f7ad3-7148-4304-a0d5-e66e0eca81a7","level":"info","msg":"get cache success","time":"2024-09-10T18:24:01+08:00"}
+{"X-Request-ID":"ba40ab85-dad5-4949-ad33-1590382f018c","level":"info","msg":"get cache success","time":"2024-09-10T18:24:02+08:00"}
+{"X-Request-ID":"62160e11-e664-4a0b-927f-a36757111dbe","level":"info","msg":"get cache success","time":"2024-09-10T18:24:02+08:00"}
+{"X-Request-ID":"9ea6bb2b-aece-4ef4-9438-f98ec77818bb","level":"info","msg":"get cache success: banner","time":"2024-09-10T18:27:10+08:00"}

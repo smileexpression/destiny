@@ -67,7 +67,7 @@ func (a *App) serve() {
 	a.userController.Register()
 	a.storageController = controller.NewStorageController(a.r, a.db, a.storageClient)
 	a.storageController.Register()
-	a.bannerController = controller.NewBannerController(a.r, a.db)
+	a.bannerController = controller.NewBannerController(a.r, a.db, a.cacheClient)
 	a.bannerController.Register()
 	a.goodsController = controller.NewGoodsController(a.r, a.db, a.cacheClient)
 	a.goodsController.Register()

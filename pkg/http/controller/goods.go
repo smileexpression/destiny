@@ -2,7 +2,6 @@ package controller
 
 import (
 	"crypto/rand"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"math/big"
@@ -66,29 +65,11 @@ func (g *GoodsController) recent(c *gin.Context) {
 		return
 	}
 
-	// 缓存
-	key := fmt.Sprintf("recent_%d", limit)
 	var recentGoods []model.Goods
-
-	data, err := g.cacheClient.Get(ctx0, key)
-	if err == nil {
-		if err = json.Unmarshal(data, &recentGoods); err != nil {
-			log.WithError(err).Error("fail to unmarshal recent goods")
-		} else {
-			c.JSON(http.StatusOK, gin.H{"result": recentGoods})
-			return
-		}
-	}
-
 	if err = g.db.Where("is_sold = ?", false).Order("created_at DESC").Limit(limit).Find(&recentGoods).Error; err != nil {
 		log.WithError(err).Error("fail to get recent goods")
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
-	}
-
-	cacheData, err := json.Marshal(recentGoods)
-	if err = g.cacheClient.Set(ctx0, key, cacheData); err != nil {
-		log.WithError(err).Error("fail to cache recent goods")
 	}
 
 	c.JSON(http.StatusOK, gin.H{"result": recentGoods})

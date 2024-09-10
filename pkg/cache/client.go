@@ -3,6 +3,7 @@ package cache
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/redis/go-redis/v9"
 
@@ -45,16 +46,16 @@ func (c *Client) Get(ctx context.Context, key string) ([]byte, error) {
 
 	data, err := c.redisClient.Get(ctx, key).Bytes()
 	if errors.Is(err, redis.Nil) {
-		log.WithError(err).Info("cache miss")
+		log.WithError(err).Infof("get cache miss: %s", key)
 		return nil, err
 	}
 
 	if err != nil {
-		log.WithError(err).Error("get cache fail")
+		log.WithError(err).Errorf("get cache fail: %s", key)
 		return nil, err
 	}
 
-	log.Info("get cache success")
+	log.Infof("get cache success: %s", key)
 	return data, nil
 }
 
@@ -63,9 +64,9 @@ func (c *Client) Set(ctx context.Context, key string, value []byte) error {
 		log = logger.SmileLog.WithContext(ctx)
 	)
 
-	if err := c.redisClient.Set(ctx, key, value, 0).Err(); err != nil {
+	if err := c.redisClient.Set(ctx, key, value, time.Duration(c.options.Duration)*time.Second).Err(); err != nil {
 		return err
 	}
-	log.Info("set cache success")
+	log.Infof("set cache success: %s", key)
 	return nil
 }
