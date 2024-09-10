@@ -2,6 +2,7 @@ package app
 
 import (
 	"os"
+	"smile.expression/destiny/pkg/http/routes"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/gin-gonic/gin"
@@ -11,7 +12,7 @@ import (
 	"smile.expression/destiny/logger"
 	"smile.expression/destiny/pkg/database"
 	"smile.expression/destiny/pkg/http/controller"
-	"smile.expression/destiny/pkg/routes"
+	"smile.expression/destiny/pkg/http/middleware"
 	"smile.expression/destiny/pkg/storage"
 )
 
@@ -47,12 +48,14 @@ func (a *App) Init() {
 }
 
 func (a *App) serve() {
-	a.r = gin.Default()
 	a.db = database.NewDB(a.options.DBOptions)
 
 	a.storageClient = storage.NewClient(a.options.StorageOptions)
 
 	// controller
+	a.r = gin.Default()
+	a.r.Use(middleware.GenerateRequestID(), middleware.SetRequestID())
+
 	a.userController = controller.NewUserController(a.db)
 	a.userController.Register(a.r)
 	a.storageController = controller.NewStorageController(a.r, a.db, a.storageClient)
@@ -63,12 +66,15 @@ func (a *App) serve() {
 }
 
 func (a *App) initOrUpdateConfig() {
+	var (
+		log = logger.SmileLog.Logger
+	)
 	// 读取配置文件
 	if err := viper.ReadInConfig(); err != nil {
-		logger.Logger.WithError(err).Error("read config failed")
+		log.WithError(err).Error("read config failed")
 	}
 
 	if err := viper.Unmarshal(&a.options); err != nil {
-		logger.Logger.WithError(err).Error("unmarshal config file error")
+		log.WithError(err).Error("unmarshal config file error")
 	}
 }

@@ -14,7 +14,7 @@ import (
 	"smile.expression/destiny/pkg/common"
 	"smile.expression/destiny/pkg/database"
 	"smile.expression/destiny/pkg/database/model"
-	"smile.expression/destiny/pkg/middleware"
+	"smile.expression/destiny/pkg/http/middleware"
 )
 
 type UserController struct {
@@ -44,8 +44,7 @@ type apiAddress struct {
 // register 注册接口函数
 func (u *UserController) register(ctx *gin.Context) {
 	var (
-		ctx0 = ctx.Request.Context()
-		log  = logger.Logger.WithContext(ctx0)
+		log = logger.SmileLog.WithContext(ctx)
 	)
 
 	//获取数据

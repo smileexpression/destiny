@@ -1,19 +1,19 @@
 package controller
 
 import (
-	"github.com/minio/minio-go/v7"
 	"mime/multipart"
 	"net/http"
-	"smile.expression/destiny/pkg/constant"
-	"smile.expression/destiny/pkg/storage"
 
 	"github.com/gin-gonic/gin"
+	"github.com/minio/minio-go/v7"
 	"gorm.io/gorm"
 
 	"smile.expression/destiny/logger"
+	"smile.expression/destiny/pkg/constant"
 	"smile.expression/destiny/pkg/database"
 	"smile.expression/destiny/pkg/database/model"
-	"smile.expression/destiny/pkg/middleware"
+	"smile.expression/destiny/pkg/http/middleware"
+	"smile.expression/destiny/pkg/storage"
 )
 
 type StorageController struct {
@@ -41,7 +41,7 @@ func (s *StorageController) Register() {
 func (s *StorageController) upload(c *gin.Context) {
 	var (
 		ctx0 = c.Request.Context()
-		log  = logger.Logger.WithContext(ctx0)
+		log  = logger.SmileLog.WithContext(ctx0)
 	)
 
 	file, err := c.FormFile("file")
@@ -60,6 +60,8 @@ func (s *StorageController) upload(c *gin.Context) {
 			log.WithError(err).Error("error closing file")
 		}
 	}(content)
+
+	log.Infof("uploading file %s", file.Filename)
 
 	resp, err := s.storageClient.PutObject(ctx0, "picture", file.Filename, content, file.Size, minio.PutObjectOptions{
 		ContentType: file.Header.Get(constant.ContentType),

@@ -1,11 +1,13 @@
 package main
 
 import (
-	_ "smile.expression/destiny/logger"
+	"smile.expression/destiny/logger"
 	"smile.expression/destiny/pkg/app"
 )
 
 func main() {
+	logger.Init()
+
 	application := &app.App{}
 	application.Init()
 }
