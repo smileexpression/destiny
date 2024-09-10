@@ -125,3 +125,15 @@
 {"X-Request-ID":"d7c3fbed-d4a6-4b87-ba7b-285601fa6706","bucket":"picture","level":"info","msg":"RemoveObject success","object":"fdsa/dfa/ddd","route":"RemoveObject","time":"2024-09-10T13:29:04+08:00"}
 {"X-Request-ID":"0f1947c8-27d5-4b15-8118-49583e337ffe","bucket":"picture","level":"info","msg":"RemoveObject success","object":"fdsa/dfa/ddd","route":"RemoveObject","time":"2024-09-10T13:29:05+08:00"}
 {"X-Request-ID":"ca021cb0-1270-4ae6-8dfd-750294c504f6","bucket":"picture","level":"info","msg":"RemoveObject success","object":"fdsa/dfa/ddd","route":"RemoveObject","time":"2024-09-10T13:29:31+08:00"}
+{"X-Request-ID":"3b03418f-14b2-4edd-9b33-0ee3a48174a4","level":"error","msg":"invalid telephone number: 15022224444","time":"2024-09-10T13:49:45+08:00"}
+{"X-Request-ID":"3b03418f-14b2-4edd-9b33-0ee3a48174a4","error":"Error 1062 (23000): Duplicate entry '15022224444' for key 'uni_users_telephone'","level":"error","msg":"create user failed","time":"2024-09-10T13:49:45+08:00"}
+{"X-Request-ID":"dfd18314-5b13-4e2b-9b33-f2995bd6ac40","level":"error","msg":"invalid telephone number: 15022224444","time":"2024-09-10T13:53:03+08:00"}
+{"X-Request-ID":"9bea70cf-119c-4eb8-82a4-5ca1762b363d","level":"error","msg":"invalid telephone number: 15022224444","time":"2024-09-10T13:53:10+08:00"}
+{"X-Request-ID":"e669a28d-703c-4ea5-88d7-403603064f61","level":"error","msg":"invalid telephone number: 15022224444","time":"2024-09-10T13:53:10+08:00"}
+{"X-Request-ID":"a7fe7cdd-7a6c-428e-a1df-7c6595165a2a","level":"error","msg":"invalid telephone number: 15022224444","time":"2024-09-10T13:53:11+08:00"}
+{"X-Request-ID":"aa642dda-a63e-464e-93d7-77a863e96529","level":"error","msg":"invalid telephone number: 15022224444","time":"2024-09-10T13:53:11+08:00"}
+{"X-Request-ID":"07ff571d-03da-4d85-a896-6b8541e8082a","level":"error","msg":"invalid telephone number: 15022224444","time":"2024-09-10T13:53:12+08:00"}
+{"X-Request-ID":"d9bd007b-d4a3-4e51-b861-b12dd41a3c3a","level":"error","msg":"invalid telephone number: 15022224444","time":"2024-09-10T13:53:14+08:00"}
+{"X-Request-ID":"0fcd8aa7-897f-44bf-b049-84ed532b333b","error":"Error 1062 (23000): Duplicate entry '15022224445' for key 'uni_users_telephone'","level":"error","msg":"create user failed","time":"2024-09-10T13:55:15+08:00"}
+{"X-Request-ID":"01062902-f94d-4d70-bcde-578a6509531e","error":"Error 1062 (23000): Duplicate entry '15022224445' for key 'uni_users_telephone'","level":"error","msg":"create user failed","time":"2024-09-10T13:55:36+08:00"}
+{"X-Request-ID":"02281b59-d01e-4e11-a9ad-dacbd1623167","level":"error","msg":"telephone number exists: 15022224445","time":"2024-09-10T13:57:16+08:00"}

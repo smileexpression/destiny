@@ -13,6 +13,7 @@ import (
 	"smile.expression/destiny/logger"
 	"smile.expression/destiny/pkg/database"
 	"smile.expression/destiny/pkg/database/model"
+	"smile.expression/destiny/pkg/http/api"
 	"smile.expression/destiny/pkg/utils"
 )
 
@@ -34,45 +35,44 @@ func (u *UserController) Register() {
 	rg.POST("/register", u.register)
 }
 
-type apiAddress struct {
-	AddressID string `json:"id"`
-	Receiver  string `json:"receiver"`
-	Contact   string `json:"contact"`
-	Address   string `json:"address"`
-}
-
 // register 注册接口函数
-func (u *UserController) register(ctx *gin.Context) {
+func (u *UserController) register(c *gin.Context) {
 	var (
-		ctx0 = ctx.Request.Context()
+		ctx0 = c.Request.Context()
 		log  = logger.SmileLog.WithContext(ctx0)
 	)
 
 	//获取数据
 	var receiveUser model.User
-	if err := ctx.BindJSON(&receiveUser); err != nil {
+	if err := c.BindJSON(&receiveUser); err != nil {
 		log.WithError(err).Error()
-		ctx.JSON(http.StatusBadRequest, gin.H{"msg": "获取失败"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if len(receiveUser.Name) == 0 {
+		log.Errorf("invalid name: %s", receiveUser.Name)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid name"})
 		return
 	}
 
 	//账号密码基本数据长度验证
 	if len(receiveUser.Telephone) != 11 {
 		log.Errorf("invalid telephone number: %s", receiveUser.Telephone)
-		ctx.JSON(http.StatusBadRequest, gin.H{"msg": "手机号必须为11位"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid telephone number"})
 		return
 	}
 
 	if len(receiveUser.Password) < 6 || len(receiveUser.Password) > 14 {
 		log.Errorf("invalid password: %s", receiveUser.Password)
-		ctx.JSON(http.StatusBadRequest, gin.H{"msg": "密码长度需要设置为6-14个字符"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid password"})
 		return
 	}
 
 	//验证手机号是否被注册过
-	if u.isTelephoneExist(receiveUser.Telephone) {
-		log.Errorf("invalid telephone number: %s", receiveUser.Telephone)
-		ctx.JSON(http.StatusBadRequest, gin.H{"msg": "该手机号已被注册"})
+	if err := u.isTelephoneExist(receiveUser.Telephone); err != nil {
+		log.Errorf("telephone number exists: %s", receiveUser.Telephone)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "telephone number exists"})
 		return
 	}
 
@@ -80,43 +80,33 @@ func (u *UserController) register(ctx *gin.Context) {
 	hashPassword, err := bcrypt.GenerateFromPassword([]byte(receiveUser.Password), bcrypt.DefaultCost)
 	if err != nil {
 		log.WithError(err).Error()
-		ctx.JSON(http.StatusInternalServerError, gin.H{"msg": "服务出错"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	// 如果名称为空，随机创建一个名称
-	// if len(receiveUser.Name) == 0 {
-	// 	receiveUser.Name = RandomName(10)
-	// }
-
 	newUser := model.User{
-		Gender: receiveUser.Gender,
-		Name:   receiveUser.Name,
-		// Token:     receiveUser.Token,
+		Name:      receiveUser.Name,
 		Telephone: receiveUser.Telephone,
 		Password:  string(hashPassword),
-		Avatar:    "1",
+		Gender:    receiveUser.Gender,
+		Avatar:    receiveUser.Avatar,
 	}
-	u.db.Create(&newUser)
+	if err = u.db.Create(&newUser).Error; err != nil {
+		log.WithError(err).Error("create user failed")
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	//发放Token
 	token, err := utils.ReleaseToken(newUser)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "msg": "系统异常"})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
-	ctx.JSON(200, gin.H{
-		"code": 200,
-		"msg":  "注册成功",
-		"result": gin.H{
-			"id":            newUser.ID,
-			"account":       newUser.Telephone,
-			"token":         token,
-			"avatar":        newUser.Avatar,
-			"nickname":      newUser.Name,
-			"gender":        newUser.Gender,
-			"userAddresses": nil,
-		},
-	})
+
+	c.JSON(http.StatusOK, gin.H{"result": &api.RegisterResponse{
+		Token: token,
+	}})
 }
 
 // Login 登录接口函数
@@ -193,9 +183,9 @@ func Login(ctx *gin.Context) {
 		})
 	} else {
 		//创建响应数组
-		var apiAddresses []apiAddress
+		var apiAddresses []api.Address
 		for _, address := range addressArray {
-			resAddress := apiAddress{AddressID: strconv.Itoa(int(address.ID)), Receiver: address.Receiver, Contact: address.Contact, Address: address.Address}
+			resAddress := api.Address{AddressID: strconv.Itoa(int(address.ID)), Receiver: address.Receiver, Contact: address.Contact, Address: address.Address}
 			apiAddresses = append(apiAddresses, resAddress)
 		}
 		ctx.JSON(200, gin.H{
@@ -216,10 +206,15 @@ func Login(ctx *gin.Context) {
 }
 
 // 验证手机号是否已被注册
-func (u *UserController) isTelephoneExist(telephone string) bool {
+func (u *UserController) isTelephoneExist(telephone string) error {
 	var user model.User
-	u.db.Where("telephone = ?", telephone).First(&user)
-	return user.ID != 0
+	if err := u.db.Where("telephone = ?", telephone).First(&user).Error; err != nil {
+		return err
+	}
+	if user.ID != 0 {
+		return errors.New("telephone exists")
+	}
+	return nil
 }
 
 func Info(ctx *gin.Context) {
@@ -400,9 +395,9 @@ func AddAddress(ctx *gin.Context) {
 	//
 	//}
 
-	var apiAddresses []apiAddress
+	var apiAddresses []api.Address
 	for _, address := range addressArray {
-		resAddress := apiAddress{AddressID: strconv.Itoa(int(address.ID)), Receiver: address.Receiver, Contact: address.Contact, Address: address.Address}
+		resAddress := api.Address{AddressID: strconv.Itoa(int(address.ID)), Receiver: address.Receiver, Contact: address.Contact, Address: address.Address}
 		apiAddresses = append(apiAddresses, resAddress)
 	}
 	ctx.JSON(200, gin.H{
@@ -459,9 +454,9 @@ func DeleteAddress(ctx *gin.Context) {
 	//
 	//}
 
-	var apiAddresses []apiAddress
+	var apiAddresses []api.Address
 	for _, address := range addressArray {
-		resAddress := apiAddress{AddressID: strconv.Itoa(int(address.ID)), Receiver: address.Receiver, Contact: address.Contact, Address: address.Address}
+		resAddress := api.Address{AddressID: strconv.Itoa(int(address.ID)), Receiver: address.Receiver, Contact: address.Contact, Address: address.Address}
 		apiAddresses = append(apiAddresses, resAddress)
 	}
 	ctx.JSON(200, gin.H{
