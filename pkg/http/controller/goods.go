@@ -37,7 +37,7 @@ type GoodsController struct {
 
 type GoodsControllerOptions struct {
 	RecentLimit     int `json:"recentLimit"`
-	CategoryGoods   int `json:"categoryGoods"`
+	HomeGoodsLimit  int `json:"homeGoodsLimit"`
 	CacheExpiration int `json:"cacheExpiration"`
 }
 
@@ -56,6 +56,98 @@ func (c *GoodsController) Register() {
 
 	rg.GET("new", c.new)
 	rg.GET("goods", c.goods)
+}
+
+func Release(ctx *gin.Context) {
+
+	user, isExist := ctx.Get("user")
+	if !isExist {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"msg": "user not exist"})
+		return
+	}
+	userInfo := user.(model.User)
+
+	//绑定body
+	var goodInfo GoodInfo
+	if err := ctx.BindJSON(&goodInfo); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	DB := database.GetDB()
+
+	//生成good
+	userId := strconv.Itoa(int(userInfo.ID)) //之前将good表的User字段定义成了string
+	good := model.Goods{
+		CateId:      goodInfo.CateId,
+		User:        userId, //之前将good表的User字段定义成了string
+		Name:        goodInfo.Name,
+		Picture:     goodInfo.Picture[0],
+		Price:       goodInfo.Price,
+		Description: goodInfo.Description,
+		IsSold:      false,
+	}
+	if err := DB.Create(&good).Error; err != nil {
+		fmt.Println("插入失败", err)
+		return
+	}
+
+	//生成good对应的picture
+	goodId := strconv.Itoa(int(good.ID)) //之前将picture表goodId字段定义成了string
+	picture := model.Picture{
+		GoodId:   goodId,
+		Picture1: goodInfo.Picture[0],
+	}
+	if err := DB.Select("good_id", "picture1").Create(&picture).Error; err != nil {
+		fmt.Println("插入失败", err)
+		return
+	}
+
+	//有点蠢的 当前picture表项添加多张图片
+	pictureNum := len(goodInfo.Picture)
+	switch pictureNum {
+	case 2:
+		DB.Model(&picture).Where("good_id=?", goodId).Select("picture2").Updates(map[string]interface{}{
+			"picture2": goodInfo.Picture[1],
+		})
+	case 3:
+		DB.Model(&picture).Where("good_id=?", goodId).Select("picture2", "picture3").Updates(map[string]interface{}{
+			"picture2": goodInfo.Picture[1],
+			"picture3": goodInfo.Picture[2],
+		})
+	case 4:
+		DB.Model(&picture).Where("good_id=?", goodId).Select("picture2", "picture3", "picture4").Updates(map[string]interface{}{
+			"picture2": goodInfo.Picture[1],
+			"picture3": goodInfo.Picture[2],
+			"picture4": goodInfo.Picture[3],
+		})
+	case 5:
+		DB.Model(&picture).Where("good_id=?", goodId).Select("picture2", "picture3", "picture4", "picture5").Updates(map[string]interface{}{
+			"picture2": goodInfo.Picture[1],
+			"picture3": goodInfo.Picture[2],
+			"picture4": goodInfo.Picture[3],
+			"picture5": goodInfo.Picture[4],
+		})
+
+	}
+	// if pictureNum > 1 {
+	// 	DB.Model(&picture).Update("picture2", goodInfo.Picture[1])
+	// 	if pictureNum > 2 {
+	// 		DB.Model(&picture).Update("picture3", goodInfo.Picture[2])
+	// 		if pictureNum > 3 {
+	// 			DB.Model(&picture).Update("picture4", goodInfo.Picture[3])
+	// 			if pictureNum > 4 {
+	// 				DB.Model(&picture).Update("picture5", goodInfo.Picture[4])
+	// 			}
+	// 		}
+	// 	}
+	// }
+
+	ctx.JSON(200, gin.H{
+		"result": "Succeed",
+	})
 }
 
 func (c *GoodsController) goods(ctx *gin.Context) {
@@ -93,7 +185,7 @@ func (c *GoodsController) goods(ctx *gin.Context) {
 	}()
 
 	for i, g := range cate {
-		if err = c.db.Where("cate_id = ? AND is_sold = ?", g.Id, false).Order("created_at DESC").Find(&result[i].Goods).Error; err != nil {
+		if err = c.db.Where("cate_id = ? AND is_sold = ?", g.Id, false).Order("created_at DESC").Limit(c.options.HomeGoodsLimit).Find(&result[i].Goods).Error; err != nil {
 			log.WithError(err).Error("mysql query goods error")
 			ctx.AbortWithStatus(http.StatusInternalServerError)
 			return
@@ -196,98 +288,6 @@ type GoodInfo struct { //用于接收body参数
 	Description string   `json:"description"`
 	Picture     []string `json:"picture"`
 	Price       string   `json:"price"`
-}
-
-func Release(ctx *gin.Context) {
-
-	user, isExist := ctx.Get("user")
-	if !isExist {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"msg": "user not exist"})
-		return
-	}
-	userInfo := user.(model.User)
-
-	//绑定body
-	var goodInfo GoodInfo
-	if err := ctx.BindJSON(&goodInfo); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
-
-	DB := database.GetDB()
-
-	//生成good
-	userId := strconv.Itoa(int(userInfo.ID)) //之前将good表的User字段定义成了string
-	good := model.Goods{
-		CateId:      goodInfo.CateId,
-		User:        userId, //之前将good表的User字段定义成了string
-		Name:        goodInfo.Name,
-		Picture:     goodInfo.Picture[0],
-		Price:       goodInfo.Price,
-		Description: goodInfo.Description,
-		IsSold:      false,
-	}
-	if err := DB.Create(&good).Error; err != nil {
-		fmt.Println("插入失败", err)
-		return
-	}
-
-	//生成good对应的picture
-	goodId := strconv.Itoa(int(good.ID)) //之前将picture表goodId字段定义成了string
-	picture := model.Picture{
-		GoodId:   goodId,
-		Picture1: goodInfo.Picture[0],
-	}
-	if err := DB.Select("good_id", "picture1").Create(&picture).Error; err != nil {
-		fmt.Println("插入失败", err)
-		return
-	}
-
-	//有点蠢的 当前picture表项添加多张图片
-	pictureNum := len(goodInfo.Picture)
-	switch pictureNum {
-	case 2:
-		DB.Model(&picture).Where("good_id=?", goodId).Select("picture2").Updates(map[string]interface{}{
-			"picture2": goodInfo.Picture[1],
-		})
-	case 3:
-		DB.Model(&picture).Where("good_id=?", goodId).Select("picture2", "picture3").Updates(map[string]interface{}{
-			"picture2": goodInfo.Picture[1],
-			"picture3": goodInfo.Picture[2],
-		})
-	case 4:
-		DB.Model(&picture).Where("good_id=?", goodId).Select("picture2", "picture3", "picture4").Updates(map[string]interface{}{
-			"picture2": goodInfo.Picture[1],
-			"picture3": goodInfo.Picture[2],
-			"picture4": goodInfo.Picture[3],
-		})
-	case 5:
-		DB.Model(&picture).Where("good_id=?", goodId).Select("picture2", "picture3", "picture4", "picture5").Updates(map[string]interface{}{
-			"picture2": goodInfo.Picture[1],
-			"picture3": goodInfo.Picture[2],
-			"picture4": goodInfo.Picture[3],
-			"picture5": goodInfo.Picture[4],
-		})
-
-	}
-	// if pictureNum > 1 {
-	// 	DB.Model(&picture).Update("picture2", goodInfo.Picture[1])
-	// 	if pictureNum > 2 {
-	// 		DB.Model(&picture).Update("picture3", goodInfo.Picture[2])
-	// 		if pictureNum > 3 {
-	// 			DB.Model(&picture).Update("picture4", goodInfo.Picture[3])
-	// 			if pictureNum > 4 {
-	// 				DB.Model(&picture).Update("picture5", goodInfo.Picture[4])
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-	ctx.JSON(200, gin.H{
-		"result": "Succeed",
-	})
 }
 
 type apiGood struct {

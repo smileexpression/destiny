@@ -241,3 +241,155 @@
 {"X-Request-ID":"f5234093-e484-4ef2-9ddf-ff689d52f368","level":"info","msg":"get cache success: home/banner","time":"2024-09-10T19:49:08+08:00"}
 {"X-Request-ID":"651f967b-7bde-40c0-9840-c401f339b48f","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:49:08+08:00"}
 {"X-Request-ID":"6e74165a-28b4-4fbf-abcc-b3d3902434d8","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:49:08+08:00"}
+{"X-Request-ID":"e4d10b15-5b92-4d45-b4c6-c880f72b5181","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T19:56:10+08:00"}
+{"X-Request-ID":"e4d10b15-5b92-4d45-b4c6-c880f72b5181","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T19:56:20+08:00"}
+{"X-Request-ID":"c7a5f1d9-1c9f-461f-9fb6-30bdcd445083","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:56:27+08:00"}
+{"X-Request-ID":"f10c23aa-1bb9-4ea1-9747-4e232c7bae2e","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:56:33+08:00"}
+{"X-Request-ID":"32416d32-611e-4067-94a3-9bc39f5c7766","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:56:33+08:00"}
+{"X-Request-ID":"c886b311-e6bc-4eac-beb2-d02a2d9a7416","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:56:33+08:00"}
+{"X-Request-ID":"9f1573f4-dea6-46a9-9188-b600d93e8e29","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:56:34+08:00"}
+{"X-Request-ID":"e56ef69b-3d39-4a0c-a564-3dedb2e8dd7e","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:56:34+08:00"}
+{"X-Request-ID":"61a373be-3f3d-4cf9-96b1-f6de4fd5e98a","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:56:35+08:00"}
+{"X-Request-ID":"56288f9f-518c-4ac6-8f51-52cdef517775","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:56:35+08:00"}
+{"X-Request-ID":"ed0c5445-8b18-4a9f-a2e0-391a12585394","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:56:35+08:00"}
+{"X-Request-ID":"c801b913-5a6d-4335-aa7b-747a82bc42bd","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:56:36+08:00"}
+{"X-Request-ID":"5cbe5f00-4d5f-41dd-bf75-600aa5f259e1","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:56:47+08:00"}
+{"X-Request-ID":"48474e31-5228-4ff0-852a-7e9b849893f2","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T19:57:07+08:00"}
+{"X-Request-ID":"48474e31-5228-4ff0-852a-7e9b849893f2","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T19:57:07+08:00"}
+{"X-Request-ID":"c1148327-afc3-4898-885c-6501cb3fca86","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:57:09+08:00"}
+{"X-Request-ID":"ac82b870-4256-4161-8c06-7dcf7e84711b","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:57:09+08:00"}
+{"X-Request-ID":"36576999-4b96-4514-92b4-b1e08c9a2514","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:57:10+08:00"}
+{"X-Request-ID":"be6e8e43-68f7-4450-8360-aecf98289c10","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:57:10+08:00"}
+{"X-Request-ID":"62bb33bb-886d-4aa1-83d3-8d46d80b0a47","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:57:22+08:00"}
+{"X-Request-ID":"f8f0222c-0764-43d1-8f87-1be5c3885821","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:57:45+08:00"}
+{"X-Request-ID":"7caa8638-13ec-47f5-b651-2e638c0c8590","error":"redis: nil","level":"info","msg":"get cache miss: home/banner","time":"2024-09-10T19:58:34+08:00"}
+{"X-Request-ID":"42f34525-209b-4736-9200-0219a6f330fe","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T19:58:34+08:00"}
+{"X-Request-ID":"7caa8638-13ec-47f5-b651-2e638c0c8590","level":"info","msg":"set cache success: home/banner","time":"2024-09-10T19:58:34+08:00"}
+{"X-Request-ID":"42f34525-209b-4736-9200-0219a6f330fe","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T19:58:34+08:00"}
+{"X-Request-ID":"f27ae8f1-474f-46c3-b3f6-07393da2ca95","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:58:34+08:00"}
+{"X-Request-ID":"329a83ef-8bf7-4ab3-aa5e-126d71229b35","level":"info","msg":"get cache success: home/banner","time":"2024-09-10T19:58:38+08:00"}
+{"X-Request-ID":"1f675c21-fe71-4aa9-8e25-d72e6bf2427a","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:58:38+08:00"}
+{"X-Request-ID":"049893cb-edc1-45af-8efa-2088920cd268","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:58:38+08:00"}
+{"X-Request-ID":"5bfc9dca-0a99-4874-bd69-8fda778dff8b","level":"info","msg":"get cache success: home/banner","time":"2024-09-10T19:58:39+08:00"}
+{"X-Request-ID":"af8401a6-40ad-4e40-81d7-ac9e5ebb14ad","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:58:39+08:00"}
+{"X-Request-ID":"c55a11c6-1f19-4f69-85ad-e992d93b43ec","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:58:39+08:00"}
+{"X-Request-ID":"dfb0ef16-b083-4738-ad9b-2ae53e4b34fc","level":"info","msg":"get cache success: home/banner","time":"2024-09-10T19:58:40+08:00"}
+{"X-Request-ID":"593111f4-dfcb-4342-98ed-398c77fb9459","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:58:40+08:00"}
+{"X-Request-ID":"fddc733e-ae4f-44ef-adc8-4a6ef9a84b08","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T19:58:40+08:00"}
+{"X-Request-ID":"f187439e-1193-4edc-9347-d61e0f1d4972","level":"info","msg":"get cache success: home/banner","time":"2024-09-10T20:00:03+08:00"}
+{"X-Request-ID":"988e0fd7-8e72-44d6-a9c6-6b2337ac6650","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T20:00:03+08:00"}
+{"X-Request-ID":"988e0fd7-8e72-44d6-a9c6-6b2337ac6650","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T20:00:03+08:00"}
+{"X-Request-ID":"6b164e58-f252-41ca-a84c-9d26fd781e1c","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:00:03+08:00"}
+{"X-Request-ID":"b62b3996-099a-40d3-9908-2aaf58d73fb1","level":"info","msg":"get cache success: home/banner","time":"2024-09-10T20:00:41+08:00"}
+{"X-Request-ID":"e63db86d-9725-4f37-b78f-e17d166f4b0b","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:00:41+08:00"}
+{"X-Request-ID":"1a6533bc-eaaf-4b8f-b437-f1a586b98c23","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:00:41+08:00"}
+{"X-Request-ID":"bcae1c41-cceb-45c6-b93d-197d01e927fb","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:00:46+08:00"}
+{"X-Request-ID":"04b51a9d-5db8-45e0-bc57-a9b3746e3740","level":"info","msg":"get cache success: home/banner","time":"2024-09-10T20:00:53+08:00"}
+{"X-Request-ID":"dffa1ab6-3856-4cdf-aa2a-20c6a586c30c","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:00:53+08:00"}
+{"X-Request-ID":"ce4975e6-40f6-4f32-a566-27a493221db1","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:00:53+08:00"}
+{"X-Request-ID":"65d2516b-b1f2-4599-9865-27038c0da2f7","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:00:55+08:00"}
+{"X-Request-ID":"a6dff236-8402-40bd-bffb-40d03f61b2ca","level":"info","msg":"get cache success: home/banner","time":"2024-09-10T20:01:07+08:00"}
+{"X-Request-ID":"f8004ff6-05e7-48d6-8024-a6f17b0f5564","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T20:01:07+08:00"}
+{"X-Request-ID":"f8004ff6-05e7-48d6-8024-a6f17b0f5564","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T20:01:07+08:00"}
+{"X-Request-ID":"2f8c155d-1a82-44a0-97a0-c06c089c9658","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:01:07+08:00"}
+{"X-Request-ID":"0ad18084-c779-47e9-8643-808ec11a2691","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:01:16+08:00"}
+{"X-Request-ID":"f659d336-39b9-4f22-bf24-3fc4504a4f36","level":"info","msg":"get cache success: home/banner","time":"2024-09-10T20:01:19+08:00"}
+{"X-Request-ID":"cc7032d3-10dc-44fa-9a13-561ed54c9474","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:01:19+08:00"}
+{"X-Request-ID":"505bbe26-702d-4d2f-8eec-c53bc88d4d28","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:01:19+08:00"}
+{"X-Request-ID":"ad2359d2-c1c1-4cf0-9bca-409bc07c7ef8","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:01:34+08:00"}
+{"X-Request-ID":"26f4285c-4034-45da-a4ea-df8f197d8c76","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:02:02+08:00"}
+{"X-Request-ID":"6232be07-72e0-4b88-9835-ec4bbd30b107","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T20:07:22+08:00"}
+{"X-Request-ID":"6232be07-72e0-4b88-9835-ec4bbd30b107","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T20:07:22+08:00"}
+{"X-Request-ID":"d0249af4-74fd-4728-a0d9-903bdda709e9","error":"redis: nil","level":"info","msg":"get cache miss: home/banner","time":"2024-09-10T20:08:48+08:00"}
+{"X-Request-ID":"cdd39985-36bd-48ae-96d1-8623625a4c9c","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T20:08:48+08:00"}
+{"X-Request-ID":"d0249af4-74fd-4728-a0d9-903bdda709e9","level":"info","msg":"set cache success: home/banner","time":"2024-09-10T20:08:48+08:00"}
+{"X-Request-ID":"cdd39985-36bd-48ae-96d1-8623625a4c9c","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T20:08:48+08:00"}
+{"X-Request-ID":"7c672916-3f7c-4eaa-a8a4-23c76661c701","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:08:48+08:00"}
+{"X-Request-ID":"26df9168-1802-475c-a0f1-26862bc9805f","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:08:55+08:00"}
+{"X-Request-ID":"55ddf91d-6889-4808-94fe-85d0ce1c6ad7","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T20:10:35+08:00"}
+{"X-Request-ID":"55ddf91d-6889-4808-94fe-85d0ce1c6ad7","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T20:10:35+08:00"}
+{"X-Request-ID":"1f0dab11-1f52-49ba-a0b6-a25dbc7118a1","level":"info","msg":"get cache success: home/banner","time":"2024-09-10T20:10:41+08:00"}
+{"X-Request-ID":"5b34cee6-47ed-4c71-84dd-4c18ee8e8daf","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:10:41+08:00"}
+{"X-Request-ID":"6df7be10-93fa-4dff-b4e3-f8f21855906f","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:10:41+08:00"}
+{"X-Request-ID":"0e26e942-8464-44c5-b0f3-3e2bcd8fa700","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:10:43+08:00"}
+{"X-Request-ID":"a166a157-da4a-44be-a3cd-2ac08fe1dda7","level":"info","msg":"get cache success: home/banner","time":"2024-09-10T20:10:54+08:00"}
+{"X-Request-ID":"f7fbf157-d345-476e-8ed9-3be77c972f54","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:10:54+08:00"}
+{"X-Request-ID":"a5c69fb6-f3b1-4bc4-92f2-f6b59a9fc120","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:10:54+08:00"}
+{"X-Request-ID":"fe01553e-e15d-40dd-b81f-880b04576fec","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:10:57+08:00"}
+{"X-Request-ID":"539f16bf-fed3-4b79-9ce7-32c9c351057f","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:11:05+08:00"}
+{"X-Request-ID":"76276cda-f6e8-4aa8-84bf-ca03cdf248c4","error":"redis: nil","level":"info","msg":"get cache miss: home/banner","time":"2024-09-10T20:40:12+08:00"}
+{"X-Request-ID":"817980a9-3c33-46d2-a87a-c27c89b410fe","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T20:40:12+08:00"}
+{"X-Request-ID":"76276cda-f6e8-4aa8-84bf-ca03cdf248c4","level":"info","msg":"set cache success: home/banner","time":"2024-09-10T20:40:16+08:00"}
+{"X-Request-ID":"817980a9-3c33-46d2-a87a-c27c89b410fe","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T20:40:16+08:00"}
+{"X-Request-ID":"fa059b3b-32f3-47c6-b8ec-4a49beb01152","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:40:16+08:00"}
+{"X-Request-ID":"77e7828c-bede-4d30-9d37-a9c53a6ea7cc","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:40:22+08:00"}
+{"X-Request-ID":"ddcb3967-b9ab-4082-9e03-c37d4a242531","bucket":"picture","error":"Object name contains unsupported characters.","level":"error","msg":"PutObject fail","object":"2024-09-10//手机严选.jpeg","route":"PutObject","size":25248,"time":"2024-09-10T20:45:43+08:00"}
+{"X-Request-ID":"21a26c2c-ea00-4746-bbb1-03875f24704e","error":"redis: nil","level":"info","msg":"get cache miss: home/banner","time":"2024-09-10T20:49:50+08:00"}
+{"X-Request-ID":"21a26c2c-ea00-4746-bbb1-03875f24704e","level":"info","msg":"set cache success: home/banner","time":"2024-09-10T20:49:50+08:00"}
+{"X-Request-ID":"988cfaa3-f87c-4541-98de-aaf33f6b19e6","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T20:49:50+08:00"}
+{"X-Request-ID":"988cfaa3-f87c-4541-98de-aaf33f6b19e6","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T20:49:50+08:00"}
+{"X-Request-ID":"e8fe7411-86a7-49a3-afe8-91af52532fa9","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:49:50+08:00"}
+{"X-Request-ID":"43a6b90a-934c-46be-a04b-38ed40275341","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:50:12+08:00"}
+{"X-Request-ID":"0e723465-13f1-4809-af35-c5fdb2445702","level":"info","msg":"get cache success: home/banner","time":"2024-09-10T20:54:26+08:00"}
+{"X-Request-ID":"571b7ce8-40c5-4e78-a620-b9bd53f09a5b","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T20:54:26+08:00"}
+{"X-Request-ID":"571b7ce8-40c5-4e78-a620-b9bd53f09a5b","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T20:54:27+08:00"}
+{"X-Request-ID":"0bc8ace8-b071-4aba-ad81-0a01baf69c69","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:54:27+08:00"}
+{"X-Request-ID":"6773e982-28a2-40a0-92d3-55b0958ba491","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:54:33+08:00"}
+{"X-Request-ID":"7f57ceef-b6d6-4d6c-bdd5-1c2b40974955","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T20:55:32+08:00"}
+{"X-Request-ID":"7f57ceef-b6d6-4d6c-bdd5-1c2b40974955","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T20:55:32+08:00"}
+{"X-Request-ID":"fd1706be-91e2-4ac3-9a7c-26ec4931d1d6","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:55:54+08:00"}
+{"X-Request-ID":"6abd94cc-4cb2-4acd-8e97-cb38aa43bf90","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:56:30+08:00"}
+{"X-Request-ID":"f3937652-2933-414c-93c8-032deb48baad","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T20:56:43+08:00"}
+{"X-Request-ID":"f3937652-2933-414c-93c8-032deb48baad","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T20:56:43+08:00"}
+{"X-Request-ID":"c34c4536-63fb-4312-a3a1-798fbb471160","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T20:56:45+08:00"}
+{"X-Request-ID":"f0ed9027-8fff-4f5f-939c-82361d0af1a9","bucket":"picture","level":"info","msg":"PutObject success","object":"2024-09-10/smile/保真奢品.jpeg","route":"PutObject","size":34775,"time":"2024-09-10T20:58:58+08:00"}
+{"X-Request-ID":"a519c137-f628-436c-8265-f5f97bf48a17","error":"redis: nil","level":"info","msg":"get cache miss: home/banner","time":"2024-09-10T21:02:41+08:00"}
+{"X-Request-ID":"d75a194b-d8eb-41a2-849e-28d4dd851956","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T21:02:41+08:00"}
+{"X-Request-ID":"a519c137-f628-436c-8265-f5f97bf48a17","level":"info","msg":"set cache success: home/banner","time":"2024-09-10T21:02:41+08:00"}
+{"X-Request-ID":"d75a194b-d8eb-41a2-849e-28d4dd851956","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T21:02:41+08:00"}
+{"X-Request-ID":"accfa4ef-bf46-4e34-b0de-657ebfef662b","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T21:02:41+08:00"}
+{"X-Request-ID":"7d7122ad-be39-476d-9099-0b6058dea558","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T21:03:10+08:00"}
+{"X-Request-ID":"a8fdeda6-d3d4-4f07-af67-1b72b76ae8ee","bucket":"picture","level":"info","msg":"PutObject success","object":"2024-09-10/smile/手机严选.jpeg","route":"PutObject","size":25248,"time":"2024-09-10T21:03:18+08:00"}
+{"X-Request-ID":"cf511747-3791-4028-9cb2-6152df0968d9","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T21:04:09+08:00"}
+{"X-Request-ID":"cf511747-3791-4028-9cb2-6152df0968d9","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T21:04:09+08:00"}
+{"X-Request-ID":"2cc22618-8a4c-4fdb-9e3d-71b854ae4756","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T21:04:09+08:00"}
+{"X-Request-ID":"387dc343-7931-44ae-bb9c-77ee4898ee41","bucket":"picture","level":"info","msg":"PutObject success","object":"2024-09-10/smile/手机严选.jpeg","route":"PutObject","size":25248,"time":"2024-09-10T21:04:17+08:00"}
+{"X-Request-ID":"d57fcda2-b848-48be-8b8f-dddb64bd4566","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T21:05:01+08:00"}
+{"X-Request-ID":"16284260-3559-4480-bac1-3c205f70ccd7","bucket":"picture","level":"info","msg":"PutObject success","object":"2024-09-10/smile/手机严选.jpeg","route":"PutObject","size":25248,"time":"2024-09-10T21:05:06+08:00"}
+{"X-Request-ID":"e4d08dc5-93ca-40a3-be49-f86b52852a99","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T21:05:41+08:00"}
+{"X-Request-ID":"e4d08dc5-93ca-40a3-be49-f86b52852a99","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T21:05:41+08:00"}
+{"X-Request-ID":"a3a5f0f9-8d58-469e-a5e5-15f56fb05df3","bucket":"picture","level":"info","msg":"PutObject success","object":"2024-09-10/smile/1me3h12000crku5fy827E_C_760_506_R5.jpg","route":"PutObject","size":128828,"time":"2024-09-10T21:07:07+08:00"}
+{"X-Request-ID":"b4aa0f63-e2fb-4ded-ab12-b7f4a68fc71a","bucket":"picture","level":"info","msg":"PutObject success","object":"2024-09-10/smile/1me3h12000crku5fy827E_C_760_506_R5.jpg","route":"PutObject","size":128828,"time":"2024-09-10T21:07:51+08:00"}
+{"X-Request-ID":"d9139af4-6198-4605-abea-78aaa46d78db","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T21:08:28+08:00"}
+{"X-Request-ID":"d9139af4-6198-4605-abea-78aaa46d78db","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T21:08:28+08:00"}
+{"X-Request-ID":"6bd8406b-3f08-44c2-95d4-33c90203752c","bucket":"picture","level":"info","msg":"PutObject success","object":"2024-09-10/smile/1me3h12000crku5fy827E_C_760_506_R5.jpg","route":"PutObject","size":128828,"time":"2024-09-10T21:08:30+08:00"}
+{"X-Request-ID":"7c459c42-d488-449c-8373-c4435f6d5ca0","bucket":"picture","level":"info","msg":"PutObject success","object":"2024-09-10/smile/1me3h12000crku5fy827E_C_760_506_R5.jpg","route":"PutObject","size":128828,"time":"2024-09-10T21:08:54+08:00"}
+{"X-Request-ID":"a0083745-585e-4858-9c1a-0101c7febfd3","bucket":"picture","level":"info","msg":"PutObject success","object":"2024-09-10/smile/手机严选.jpeg","route":"PutObject","size":25248,"time":"2024-09-10T21:09:45+08:00"}
+{"X-Request-ID":"f9922777-d7b6-4d4b-96b6-3fb2120c65fb","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T21:19:31+08:00"}
+{"X-Request-ID":"f9922777-d7b6-4d4b-96b6-3fb2120c65fb","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T21:19:31+08:00"}
+{"X-Request-ID":"93afcffd-2b6a-447b-9dad-d5a2f00b90ac","bucket":"picture","level":"info","msg":"PutObject success","object":"2024-09-10/smile/手机严选.jpeg","route":"PutObject","size":25248,"time":"2024-09-10T21:19:41+08:00"}
+{"X-Request-ID":"727de573-fa00-453e-ab50-08d5e0853406","bucket":"picture","level":"info","msg":"PutObject success","object":"2024-09-10/smile/手机严选.jpeg","route":"PutObject","size":25248,"time":"2024-09-10T21:20:26+08:00"}
+{"X-Request-ID":"b67a3679-9854-4681-aae5-0350fab7bb48","bucket":"picture","level":"info","msg":"PutObject success","object":"2024-09-10/smile/头像.jpg","route":"PutObject","size":50515,"time":"2024-09-10T21:20:30+08:00"}
+{"X-Request-ID":"74d1bbd5-5ae2-471f-bfa4-f960b7fdada5","error":"redis: nil","level":"info","msg":"get cache miss: home/banner","time":"2024-09-10T21:20:53+08:00"}
+{"X-Request-ID":"74d1bbd5-5ae2-471f-bfa4-f960b7fdada5","level":"info","msg":"set cache success: home/banner","time":"2024-09-10T21:20:54+08:00"}
+{"X-Request-ID":"e78eeb71-13d6-4fb2-8bac-72d12ee62779","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T21:20:54+08:00"}
+{"X-Request-ID":"e78eeb71-13d6-4fb2-8bac-72d12ee62779","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T21:20:54+08:00"}
+{"X-Request-ID":"775c7419-03de-470c-89ec-9b99118d941c","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T21:20:54+08:00"}
+{"X-Request-ID":"bba14bfe-2e9a-4ec2-a24e-27ad6630ad4c","bucket":"picture","level":"info","msg":"PutObject success","object":"2024-09-10/smile/手机严选.jpeg","route":"PutObject","size":25248,"time":"2024-09-10T21:25:18+08:00"}
+{"X-Request-ID":"aabcb915-b4e2-4b39-8d3f-547fbb0a969c","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T21:30:32+08:00"}
+{"X-Request-ID":"aabcb915-b4e2-4b39-8d3f-547fbb0a969c","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T21:30:32+08:00"}
+{"X-Request-ID":"445a9120-6be7-4900-b787-41d8300718d4","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-10T21:30:33+08:00"}
+{"X-Request-ID":"dea9173b-0250-400d-9b94-4634832d95fd","bucket":"picture","level":"info","msg":"PutObject success","object":"smile/2024-09-10/手机严选.jpeg","route":"PutObject","size":25248,"time":"2024-09-10T21:30:38+08:00"}
+{"X-Request-ID":"3ad10e96-d715-4fe5-a1d6-4f3de512f1db","bucket":"picture","level":"info","msg":"PutObject success","object":"smile/2024-09-10/文玩珠宝.jpg","route":"PutObject","size":312754,"time":"2024-09-10T21:30:50+08:00"}
+{"X-Request-ID":"3b2a639f-3842-41a0-a0a5-f090c3903d85","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-10T21:36:41+08:00"}
+{"X-Request-ID":"3b2a639f-3842-41a0-a0a5-f090c3903d85","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-10T21:36:42+08:00"}
+{"X-Request-ID":"ec25f238-1e41-4e32-8fc9-f2c9d69fcbd4","bucket":"picture","level":"info","msg":"PutObject success","object":"smile/2024-09-10/头像.jpg","route":"PutObject","size":50515,"time":"2024-09-10T21:36:47+08:00"}
+{"X-Request-ID":"4fe4060a-fff8-4b6b-b6f4-e85514347847","bucket":"picture","error":"Delete \"http://localhost:9000/picture/smile/2024-09-10/%E5%A4%B4%E5%83%8F.jpg\": context canceled","level":"error","msg":"RemoveObject fail","object":"smile/2024-09-10/头像.jpg","route":"RemoveObject","time":"2024-09-10T21:38:13+08:00"}
+{"X-Request-ID":"4fe4060a-fff8-4b6b-b6f4-e85514347847","error":"Delete \"http://localhost:9000/picture/smile/2024-09-10/%E5%A4%B4%E5%83%8F.jpg\": context canceled","level":"error","msg":"error deleting file","time":"2024-09-10T21:38:13+08:00"}
+{"X-Request-ID":"b21467fe-0f45-4e3b-bb9c-808839b05195","bucket":"picture","error":"context canceled","level":"error","msg":"RemoveObject fail","object":"smile/2024-09-10/头像.jpg","route":"RemoveObject","time":"2024-09-10T21:38:30+08:00"}
+{"X-Request-ID":"b21467fe-0f45-4e3b-bb9c-808839b05195","error":"context canceled","level":"error","msg":"error deleting file","time":"2024-09-10T21:38:38+08:00"}
+{"X-Request-ID":"c8a1f652-0e45-4567-8fbb-47c2d69b0b3a","bucket":"picture","error":"context canceled","level":"error","msg":"RemoveObject fail","object":"smile/2024-09-10/头像.jpg","route":"RemoveObject","time":"2024-09-10T21:39:34+08:00"}
+{"X-Request-ID":"c8a1f652-0e45-4567-8fbb-47c2d69b0b3a","error":"context canceled","level":"error","msg":"error deleting file","time":"2024-09-10T21:39:34+08:00"}
+{"X-Request-ID":"b4b373dc-067c-4855-b93c-55cefe321454","bucket":"picture","level":"info","msg":"RemoveObject success","object":"smile/2024-09-10/头像.jpg","route":"RemoveObject","time":"2024-09-10T21:39:48+08:00"}
+{"X-Request-ID":"cf333bbd-b5fa-482b-bc5f-a3f5e286bc46","bucket":"picture","level":"info","msg":"PutObject success","object":"smile/2024-09-10/头像.jpg","route":"PutObject","size":50515,"time":"2024-09-10T21:40:27+08:00"}
+{"X-Request-ID":"e83456ba-b35b-4f99-ae93-ad78c58ff5fd","bucket":"picture","level":"info","msg":"RemoveObject success","object":"smile/2024-09-10/头像.jpg","route":"RemoveObject","time":"2024-09-10T21:40:35+08:00"}

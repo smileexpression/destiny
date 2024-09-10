@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"net/url"
+	"strings"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -73,9 +75,9 @@ func (c *Client) PutObject(ctx context.Context, bucketName string, objectName st
 	}
 	log.Info("PutObject success")
 
-	url := fmt.Sprintf("http://%s/%s/%s", c.options.Endpoint, bucketName, objectName)
+	respURL := fmt.Sprintf("http://%s/%s/%s", c.options.Endpoint, bucketName, objectName)
 	return &api.PutObjectResponse{
-		URL:  url,
+		URL:  respURL,
 		ETag: info.ETag,
 		Size: info.Size,
 	}, nil
@@ -90,8 +92,7 @@ func (c *Client) RemoveObject(ctx context.Context, bucketName string, objectName
 		})
 	)
 
-	err := c.client.RemoveObject(ctx, bucketName, objectName, opts)
-	if err != nil {
+	if err := c.client.RemoveObject(ctx, bucketName, objectName, opts); err != nil {
 		log.WithError(err).Error("RemoveObject fail")
 		return err
 	}
@@ -102,4 +103,29 @@ func (c *Client) RemoveObject(ctx context.Context, bucketName string, objectName
 
 func (c *Client) SetEndpoint(uri string) string {
 	return fmt.Sprintf("http://%s/%s", c.options.Endpoint, uri)
+}
+
+func (c *Client) GetObjectName(url string) string {
+	_, objectName, err := c.ParseURL(url)
+	if err != nil {
+		return ""
+	}
+	return objectName
+}
+
+func (c *Client) ParseURL(fileURL string) (string, string, error) {
+	parsedURL, err := url.Parse(fileURL)
+	if err != nil {
+		return "", "", err
+	}
+
+	// 解析路径，例如 "/my-bucket/my-file.txt"
+	path := strings.TrimPrefix(parsedURL.Path, "/")
+	parts := strings.SplitN(path, "/", 2)
+
+	if len(parts) != 2 {
+		return "", "", fmt.Errorf("invalid URL format")
+	}
+
+	return parts[0], parts[1], nil
 }
