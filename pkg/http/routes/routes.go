@@ -17,13 +17,13 @@ func CollectRoute(r *gin.Engine) *gin.Engine {
 	//r.POST("/register", controller.register)
 	r.GET("/info", middleware.AuthMiddleware(), controller.Info)
 
-	home := r.Group("home")
-	{
-		home.GET("/goods", controller.GetGoods)
-		//home.GET("/banner", controller.GetBanner)
-		//home.GET("/new", controller.recent)
-
-	}
+	//home := r.Group("home")
+	//{
+	//	//home.GET("/goods", controller.goods)
+	//	//home.GET("/banner", controller.GetBanner)
+	//	//home.GET("/new", controller.recent)
+	//
+	//}
 	member := r.Group("member")
 	{
 		member.POST("/order", middleware.AuthMiddleware(), controller.CreateOrder)

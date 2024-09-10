@@ -59,12 +59,16 @@ func (c *Client) Get(ctx context.Context, key string) ([]byte, error) {
 	return data, nil
 }
 
-func (c *Client) Set(ctx context.Context, key string, value []byte) error {
+func (c *Client) Set(ctx context.Context, key string, value []byte, expiration int) error {
 	var (
 		log = logger.SmileLog.WithContext(ctx)
 	)
 
-	if err := c.redisClient.Set(ctx, key, value, time.Duration(c.options.Duration)*time.Second).Err(); err != nil {
+	if expiration < 0 {
+		expiration = c.options.Duration
+	}
+
+	if err := c.redisClient.Set(ctx, key, value, time.Duration(expiration)*time.Second).Err(); err != nil {
 		return err
 	}
 	log.Infof("set cache success: %s", key)

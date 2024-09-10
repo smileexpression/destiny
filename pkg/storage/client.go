@@ -99,3 +99,7 @@ func (c *Client) RemoveObject(ctx context.Context, bucketName string, objectName
 
 	return nil
 }
+
+func (c *Client) SetEndpoint(uri string) string {
+	return fmt.Sprintf("http://%s/%s", c.options.Endpoint, uri)
+}

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"crypto/rand"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"math/big"
@@ -15,14 +16,9 @@ import (
 	"smile.expression/destiny/pkg/cache"
 	"smile.expression/destiny/pkg/database"
 	"smile.expression/destiny/pkg/database/model"
+	"smile.expression/destiny/pkg/http/api"
+	"smile.expression/destiny/pkg/storage"
 )
-
-type AllIdle struct { // "_2" 区分于commodity controller的AllIdle
-	Id      string
-	Name    string `gorm:"type:varchar(20);not null"`
-	Picture string `gorm:"type:varchar(1024);not null"`
-	Goods   []model.Goods
-}
 
 type SingleIdle struct {
 	Id      string
@@ -32,73 +28,105 @@ type SingleIdle struct {
 }
 
 type GoodsController struct {
-	r           *gin.Engine
-	db          *gorm.DB
-	cacheClient *cache.Client
+	options       *GoodsControllerOptions
+	r             *gin.Engine
+	db            *gorm.DB
+	cacheClient   *cache.Client
+	storageClient *storage.Client
 }
 
-func NewGoodsController(r *gin.Engine, db *gorm.DB, cacheClient *cache.Client) *GoodsController {
+type GoodsControllerOptions struct {
+	RecentLimit     int `json:"recentLimit"`
+	CategoryGoods   int `json:"categoryGoods"`
+	CacheExpiration int `json:"cacheExpiration"`
+}
+
+func NewGoodsController(options *GoodsControllerOptions, r *gin.Engine, db *gorm.DB, cacheClient *cache.Client, storageClient *storage.Client) *GoodsController {
 	return &GoodsController{
-		r:           r,
-		db:          db,
-		cacheClient: cacheClient,
+		options:       options,
+		r:             r,
+		db:            db,
+		cacheClient:   cacheClient,
+		storageClient: storageClient,
 	}
 }
 
-func (g *GoodsController) Register() {
-	rg := g.r.Group("/home")
+func (c *GoodsController) Register() {
+	rg := c.r.Group("/home")
 
-	rg.GET("new", g.recent)
+	rg.GET("new", c.new)
+	rg.GET("goods", c.goods)
 }
 
-func (g *GoodsController) recent(c *gin.Context) {
+func (c *GoodsController) goods(ctx *gin.Context) {
 	var (
-		ctx0 = c.Request.Context()
+		ctx0 = ctx.Request.Context()
 		log  = logger.SmileLog.WithContext(ctx0)
 	)
 
-	num := c.DefaultQuery("limit", "4")
-	limit, err := strconv.Atoi(num)
-	if err != nil {
-		log.WithError(err).Error("fail to convert int")
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	var cate []model.Category
+	if err := c.db.Find(&cate).Error; err != nil {
+		log.WithError(err).Error("mysql query category error")
+		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
-	var recentGoods []model.Goods
-	if err = g.db.Where("is_sold = ?", false).Order("created_at DESC").Limit(limit).Find(&recentGoods).Error; err != nil {
-		log.WithError(err).Error("fail to get recent goods")
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+	result := make([]api.Goods, len(cate))
+	key := fmt.Sprintf("home/goods_%d", len(cate))
+
+	data, err := c.cacheClient.Get(ctx0, key)
+	if err == nil {
+		if err = json.Unmarshal(data, &result); err != nil {
+			log.WithError(err).Error("failed to unmarshal home goods data")
+		} else {
+			ctx.JSON(http.StatusOK, gin.H{"result": result})
+			return
+		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{"result": recentGoods})
-	return
-}
+	var cacheData []byte
+	defer func() {
+		cacheData, err = json.Marshal(result)
+		if err = c.cacheClient.Set(ctx0, key, cacheData, c.options.CacheExpiration); err != nil {
+			log.WithError(err).Error("redis set home goods error")
+		}
+	}()
 
-func GetGoods(ctx *gin.Context) {
+	for i, g := range cate {
+		if err = c.db.Where("cate_id = ? AND is_sold = ?", g.Id, false).Order("created_at DESC").Find(&result[i].Goods).Error; err != nil {
+			log.WithError(err).Error("mysql query goods error")
+			ctx.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
 
-	DB := database.GetDB()
-	var result [4]AllIdle
-
-	for i := 0; i < 4; i++ {
-
-		var category model.Category
-		DB.Table("categories").Where("id = ?", i+1).Find(&category)
-		result[i].Id = category.Id
-		result[i].Name = category.Name
-		result[i].Picture = category.Picture
-
-		var goods []model.Goods
-		DB.Table("goods").Where("Cate_Id = ? AND is_sold=?", i+1, false).Find(&goods)
-		result[i].Goods = append(result[i].Goods, goods...)
+		result[i].Id = g.Id
+		result[i].Name = g.Name
+		result[i].Picture = c.storageClient.SetEndpoint(g.Picture)
 	}
 
 	ctx.JSON(200, gin.H{
-		"code":   "1",
-		"msg":    "获取全部商品成功",
 		"result": result,
 	})
+	return
+}
+
+func (c *GoodsController) new(ctx *gin.Context) {
+	var (
+		ctx0 = ctx.Request.Context()
+		log  = logger.SmileLog.WithContext(ctx0)
+	)
+
+	limit := c.options.RecentLimit
+
+	var recentGoods []model.Goods
+	if err := c.db.Where("is_sold = ?", false).Order("created_at DESC").Limit(limit).Find(&recentGoods).Error; err != nil {
+		log.WithError(err).Error("fail to get new goods")
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"result": recentGoods})
+	return
 }
 
 //暂且不考虑id转换错误

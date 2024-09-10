@@ -1,5 +1,7 @@
 package api
 
+import "smile.expression/destiny/pkg/database/model"
+
 type PutObjectResponse struct {
 	URL  string `json:"url"`
 	ETag string `json:"etag"`
@@ -15,4 +17,11 @@ type Address struct {
 
 type RegisterResponse struct {
 	Token string `json:"token"`
+}
+
+type Goods struct { // "_2" 区分于commodity controller的AllIdle
+	Id      string
+	Name    string `gorm:"type:varchar(20);not null"`
+	Picture string `gorm:"type:varchar(1024);not null"`
+	Goods   []model.Goods
 }

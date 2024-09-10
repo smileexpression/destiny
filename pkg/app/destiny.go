@@ -30,9 +30,11 @@ type App struct {
 }
 
 type Options struct {
-	DBOptions      *database.Options `json:"dbOptions"`
-	StorageOptions *storage.Options  `json:"storageOptions"`
-	CacheOptions   *cache.Options    `json:"cacheOptions"`
+	DBOptions               *database.Options                   `json:"dbOptions"`
+	StorageOptions          *storage.Options                    `json:"storageOptions"`
+	CacheOptions            *cache.Options                      `json:"cacheOptions"`
+	GoodsControllerOptions  *controller.GoodsControllerOptions  `json:"goodsControllerOptions"`
+	BannerControllerOptions *controller.BannerControllerOptions `json:"bannerControllerOptions"`
 }
 
 func (a *App) Init() {
@@ -63,13 +65,20 @@ func (a *App) serve() {
 	a.r.Use(middleware.CORSMiddleware(), middleware.RecoveryMiddleware())
 	a.r.Use(middleware.GenerateRequestID(), middleware.SetRequestID())
 
+	// user controller
 	a.userController = controller.NewUserController(a.r, a.db)
 	a.userController.Register()
+
+	// storage controller
 	a.storageController = controller.NewStorageController(a.r, a.db, a.storageClient)
 	a.storageController.Register()
-	a.bannerController = controller.NewBannerController(a.r, a.db, a.cacheClient)
+
+	// banner controller
+	a.bannerController = controller.NewBannerController(a.options.BannerControllerOptions, a.r, a.db, a.cacheClient)
 	a.bannerController.Register()
-	a.goodsController = controller.NewGoodsController(a.r, a.db, a.cacheClient)
+
+	// goods controller
+	a.goodsController = controller.NewGoodsController(a.options.GoodsControllerOptions, a.r, a.db, a.cacheClient, a.storageClient)
 	a.goodsController.Register()
 
 	a.r = routes.CollectRoute(a.r)

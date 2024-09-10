@@ -13,13 +13,19 @@ import (
 )
 
 type BannerController struct {
+	options     *BannerControllerOptions
 	r           *gin.Engine
 	db          *gorm.DB
 	cacheClient *cache.Client
 }
 
-func NewBannerController(r *gin.Engine, db *gorm.DB, cacheClient *cache.Client) *BannerController {
+type BannerControllerOptions struct {
+	CacheExpiration int `json:"cacheExpiration"`
+}
+
+func NewBannerController(options *BannerControllerOptions, r *gin.Engine, db *gorm.DB, cacheClient *cache.Client) *BannerController {
 	return &BannerController{
+		options:     options,
 		r:           r,
 		db:          db,
 		cacheClient: cacheClient,
@@ -38,7 +44,7 @@ func (c *BannerController) getBanners(ctx *gin.Context) {
 		log  = logger.SmileLog.WithContext(ctx0)
 	)
 
-	key := "banner"
+	key := "home/banner"
 	var banners []model.Banner
 
 	data, err := c.cacheClient.Get(ctx0, key)
@@ -54,13 +60,13 @@ func (c *BannerController) getBanners(ctx *gin.Context) {
 	var cacheData []byte
 	defer func() {
 		cacheData, err = json.Marshal(banners)
-		if err = c.cacheClient.Set(ctx0, key, cacheData); err != nil {
-			log.WithError(err).Error("failed to cache banners")
+		if err = c.cacheClient.Set(ctx0, key, cacheData, c.options.CacheExpiration); err != nil {
+			log.WithError(err).Error("redis set banners error")
 		}
 	}()
 
 	if err = c.db.Find(&banners).Error; err != nil {
-		log.WithError(err).Errorf("failed to fetch banners")
+		log.WithError(err).Errorf("mysql query banners error")
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
