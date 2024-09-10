@@ -117,3 +117,11 @@
 {"level":"info","msg":"log initialized","time":"2024-09-10T12:51:53+08:00"}
 {"X-Request-ID":"e1068101-a04e-44fc-b9e3-353c532fcc08","bucket":"picture","level":"info","msg":"RemoveObject success","object":"头像.jpg","route":"RemoveObject","time":"2024-09-10T12:54:48+08:00"}
 {"level":"info","msg":"closing log file","time":"2024-09-10T12:56:11+08:00"}
+{"X-Request-ID":"900b7ec6-d645-4b66-8c81-23f604e9a352","bucket":"picture","level":"info","msg":"PutObject success","object":"头像.jpg","route":"PutObject","size":50515,"time":"2024-09-10T13:24:53+08:00"}
+{"X-Request-ID":"d03799b6-b0bf-49bc-ade7-91b4b48c5eb3","bucket":"picture","error":"context canceled","level":"error","msg":"PutObject fail","object":"头像.jpg","route":"PutObject","size":50515,"time":"2024-09-10T13:25:57+08:00"}
+{"X-Request-ID":"d03799b6-b0bf-49bc-ade7-91b4b48c5eb3","error":"context canceled","level":"error","msg":"error uploading file","time":"2024-09-10T13:25:57+08:00"}
+{"X-Request-ID":"6f5bf418-7102-4cc2-a07b-488a93d39b74","bucket":"picture","level":"info","msg":"RemoveObject success","object":"fdsa/dfa/ddd","route":"RemoveObject","time":"2024-09-10T13:29:00+08:00"}
+{"X-Request-ID":"fffc3bba-9f89-4c59-b88f-2a5983d57d2c","bucket":"picture","level":"info","msg":"RemoveObject success","object":"fdsa/dfa/ddd","route":"RemoveObject","time":"2024-09-10T13:29:02+08:00"}
+{"X-Request-ID":"d7c3fbed-d4a6-4b87-ba7b-285601fa6706","bucket":"picture","level":"info","msg":"RemoveObject success","object":"fdsa/dfa/ddd","route":"RemoveObject","time":"2024-09-10T13:29:04+08:00"}
+{"X-Request-ID":"0f1947c8-27d5-4b15-8118-49583e337ffe","bucket":"picture","level":"info","msg":"RemoveObject success","object":"fdsa/dfa/ddd","route":"RemoveObject","time":"2024-09-10T13:29:05+08:00"}
+{"X-Request-ID":"ca021cb0-1270-4ae6-8dfd-750294c504f6","bucket":"picture","level":"info","msg":"RemoveObject success","object":"fdsa/dfa/ddd","route":"RemoveObject","time":"2024-09-10T13:29:31+08:00"}

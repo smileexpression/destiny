@@ -11,25 +11,25 @@ import (
 	"gorm.io/gorm"
 
 	"smile.expression/destiny/logger"
-	"smile.expression/destiny/pkg/common"
 	"smile.expression/destiny/pkg/database"
 	"smile.expression/destiny/pkg/database/model"
-	"smile.expression/destiny/pkg/http/middleware"
+	"smile.expression/destiny/pkg/utils"
 )
 
 type UserController struct {
+	r  *gin.Engine
 	db *gorm.DB
 }
 
-func NewUserController(db *gorm.DB) *UserController {
+func NewUserController(r *gin.Engine, db *gorm.DB) *UserController {
 	return &UserController{
+		r:  r,
 		db: db,
 	}
 }
 
-func (u *UserController) Register(r *gin.Engine) {
-	r.Use(middleware.CORSMiddleware(), middleware.RecoveryMiddleware())
-	rg := r.Group("/api/v1/user")
+func (u *UserController) Register() {
+	rg := u.r.Group("/api/v1/user")
 
 	rg.POST("/register", u.register)
 }
@@ -44,7 +44,8 @@ type apiAddress struct {
 // register 注册接口函数
 func (u *UserController) register(ctx *gin.Context) {
 	var (
-		log = logger.SmileLog.WithContext(ctx)
+		ctx0 = ctx.Request.Context()
+		log  = logger.SmileLog.WithContext(ctx0)
 	)
 
 	//获取数据
@@ -99,7 +100,7 @@ func (u *UserController) register(ctx *gin.Context) {
 	u.db.Create(&newUser)
 
 	//发放Token
-	token, err := common.ReleaseToken(newUser)
+	token, err := utils.ReleaseToken(newUser)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "msg": "系统异常"})
 	}
@@ -157,7 +158,7 @@ func Login(ctx *gin.Context) {
 
 	//发放token
 	var err error
-	token, err := common.ReleaseToken(user)
+	token, err := utils.ReleaseToken(user)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "msg": "系统异常"})
 	}

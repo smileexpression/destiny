@@ -16,7 +16,6 @@ import (
 	"smile.expression/destiny/pkg/database"
 	"smile.expression/destiny/pkg/database/model"
 	"smile.expression/destiny/pkg/http/api"
-	"smile.expression/destiny/pkg/http/middleware"
 	"smile.expression/destiny/pkg/storage"
 )
 
@@ -35,8 +34,6 @@ func NewStorageController(r *gin.Engine, db *gorm.DB, storageClient *storage.Cli
 }
 
 func (s *StorageController) Register() {
-	s.r.Use(middleware.CORSMiddleware(), middleware.RecoveryMiddleware())
-
 	rg := s.r.Group("/api/v1/storage")
 
 	rg.PUT("/upload", s.upload)
@@ -65,8 +62,6 @@ func (s *StorageController) upload(c *gin.Context) {
 			log.WithError(err).Error("error closing file")
 		}
 	}(content)
-
-	log.Infof("uploading file %s", file.Filename)
 
 	resp, err := s.storageClient.PutObject(ctx0, "picture", file.Filename, content, file.Size, minio.PutObjectOptions{
 		ContentType: file.Header.Get(constant.ContentType),

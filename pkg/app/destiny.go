@@ -2,7 +2,6 @@ package app
 
 import (
 	"os"
-	"smile.expression/destiny/pkg/http/routes"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/gin-gonic/gin"
@@ -13,6 +12,7 @@ import (
 	"smile.expression/destiny/pkg/database"
 	"smile.expression/destiny/pkg/http/controller"
 	"smile.expression/destiny/pkg/http/middleware"
+	"smile.expression/destiny/pkg/http/routes"
 	"smile.expression/destiny/pkg/storage"
 )
 
@@ -23,6 +23,7 @@ type App struct {
 	storageClient     *storage.Client
 	userController    *controller.UserController
 	storageController *controller.StorageController
+	bannerController  *controller.BannerController
 }
 
 type Options struct {
@@ -54,12 +55,15 @@ func (a *App) serve() {
 
 	// controller
 	a.r = gin.Default()
+	a.r.Use(middleware.CORSMiddleware(), middleware.RecoveryMiddleware())
 	a.r.Use(middleware.GenerateRequestID(), middleware.SetRequestID())
 
-	a.userController = controller.NewUserController(a.db)
-	a.userController.Register(a.r)
+	a.userController = controller.NewUserController(a.r, a.db)
+	a.userController.Register()
 	a.storageController = controller.NewStorageController(a.r, a.db, a.storageClient)
 	a.storageController.Register()
+	a.bannerController = controller.NewBannerController(a.r, a.db)
+	a.bannerController.Register()
 
 	a.r = routes.CollectRoute(a.r)
 	panic(a.r.Run(":" + viper.GetString("server.port")))

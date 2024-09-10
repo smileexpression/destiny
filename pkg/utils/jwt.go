@@ -1,10 +1,11 @@
-package common
+package utils
 
 import (
-	"smile.expression/destiny/pkg/database/model"
 	"time"
 
 	"github.com/golang-jwt/jwt"
+
+	"smile.expression/destiny/pkg/database/model"
 )
 
 var jwtKey = []byte("a_secret_crect")
