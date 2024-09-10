@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 
 	"smile.expression/destiny/logger"
+	"smile.expression/destiny/pkg/cache"
 	"smile.expression/destiny/pkg/database"
 	"smile.expression/destiny/pkg/http/controller"
 	"smile.expression/destiny/pkg/http/middleware"
@@ -21,6 +22,7 @@ type App struct {
 	r                 *gin.Engine
 	db                *gorm.DB
 	storageClient     *storage.Client
+	cacheClient       *cache.Client
 	userController    *controller.UserController
 	storageController *controller.StorageController
 	bannerController  *controller.BannerController
@@ -30,6 +32,7 @@ type App struct {
 type Options struct {
 	DBOptions      *database.Options `json:"dbOptions"`
 	StorageOptions *storage.Options  `json:"storageOptions"`
+	CacheOptions   *cache.Options    `json:"cacheOptions"`
 }
 
 func (a *App) Init() {
@@ -53,6 +56,7 @@ func (a *App) serve() {
 	a.db = database.NewDB(a.options.DBOptions)
 
 	a.storageClient = storage.NewClient(a.options.StorageOptions)
+	a.cacheClient = cache.NewClient(a.options.CacheOptions)
 
 	// controller
 	a.r = gin.Default()
@@ -65,7 +69,7 @@ func (a *App) serve() {
 	a.storageController.Register()
 	a.bannerController = controller.NewBannerController(a.r, a.db)
 	a.bannerController.Register()
-	a.goodsController = controller.NewGoodsController(a.r, a.db)
+	a.goodsController = controller.NewGoodsController(a.r, a.db, a.cacheClient)
 	a.goodsController.Register()
 
 	a.r = routes.CollectRoute(a.r)

@@ -137,3 +137,22 @@
 {"X-Request-ID":"0fcd8aa7-897f-44bf-b049-84ed532b333b","error":"Error 1062 (23000): Duplicate entry '15022224445' for key 'uni_users_telephone'","level":"error","msg":"create user failed","time":"2024-09-10T13:55:15+08:00"}
 {"X-Request-ID":"01062902-f94d-4d70-bcde-578a6509531e","error":"Error 1062 (23000): Duplicate entry '15022224445' for key 'uni_users_telephone'","level":"error","msg":"create user failed","time":"2024-09-10T13:55:36+08:00"}
 {"X-Request-ID":"02281b59-d01e-4e11-a9ad-dacbd1623167","level":"error","msg":"telephone number exists: 15022224445","time":"2024-09-10T13:57:16+08:00"}
+{"X-Request-ID":"e99e92ed-234c-4ea5-b67c-70ba45c3b005","bucket":"picture","level":"info","msg":"PutObject success","object":"images.jpeg","route":"PutObject","size":4959,"time":"2024-09-10T15:42:22+08:00"}
+{"X-Request-ID":"2844bded-1a2d-4b7d-9077-4d1d5f7caa81","error":"redis: nil","level":"info","msg":"cache miss","time":"2024-09-10T16:45:56+08:00"}
+{"X-Request-ID":"2844bded-1a2d-4b7d-9077-4d1d5f7caa81","level":"info","msg":"set cache success","time":"2024-09-10T16:47:49+08:00"}
+{"X-Request-ID":"28d6222b-b77e-4248-a370-dc8d6d6c169a","error":"redis: nil","level":"info","msg":"cache miss","time":"2024-09-10T16:48:16+08:00"}
+{"X-Request-ID":"28d6222b-b77e-4248-a370-dc8d6d6c169a","level":"info","msg":"set cache success","time":"2024-09-10T16:49:23+08:00"}
+{"X-Request-ID":"e6719b7a-c1ad-4269-80a5-77e962f2b65b","error":"redis: nil","level":"info","msg":"cache miss","time":"2024-09-10T16:54:52+08:00"}
+{"X-Request-ID":"e6719b7a-c1ad-4269-80a5-77e962f2b65b","level":"info","msg":"set cache success","time":"2024-09-10T16:57:47+08:00"}
+{"X-Request-ID":"0467b9a8-a015-4642-adcd-063c20cd7a08","error":"redis: nil","level":"info","msg":"cache miss","time":"2024-09-10T16:58:01+08:00"}
+{"X-Request-ID":"0467b9a8-a015-4642-adcd-063c20cd7a08","level":"info","msg":"set cache success","time":"2024-09-10T16:59:32+08:00"}
+{"X-Request-ID":"fc5a008e-f2d5-44f2-b4fc-af8da3452cd7","error":"redis: nil","level":"info","msg":"cache miss","time":"2024-09-10T17:00:50+08:00"}
+{"X-Request-ID":"fc5a008e-f2d5-44f2-b4fc-af8da3452cd7","level":"info","msg":"set cache success","time":"2024-09-10T17:01:11+08:00"}
+{"X-Request-ID":"16caa7f0-6dcc-48fd-86f7-7061d03d726a","error":"redis: nil","level":"info","msg":"cache miss","time":"2024-09-10T17:01:31+08:00"}
+{"X-Request-ID":"16caa7f0-6dcc-48fd-86f7-7061d03d726a","level":"info","msg":"set cache success","time":"2024-09-10T17:01:45+08:00"}
+{"X-Request-ID":"3ab624fe-5142-40e2-af24-1be808bff3c8","level":"info","msg":"get cache success","time":"2024-09-10T17:02:01+08:00"}
+{"X-Request-ID":"13bfd708-0f76-4852-86af-05e904ab7722","level":"info","msg":"get cache success","time":"2024-09-10T17:02:46+08:00"}
+{"X-Request-ID":"5dee78bf-d038-474c-a424-f32a41df4d01","level":"info","msg":"get cache success","time":"2024-09-10T17:03:22+08:00"}
+{"X-Request-ID":"4e797c73-8d47-48b5-b8fb-44eb2b78c517","level":"info","msg":"get cache success","time":"2024-09-10T17:07:15+08:00"}
+{"X-Request-ID":"c534f981-5a31-4294-b5fa-76930fcdec25","error":"redis: nil","level":"info","msg":"cache miss","time":"2024-09-10T17:07:28+08:00"}
+{"X-Request-ID":"c534f981-5a31-4294-b5fa-76930fcdec25","level":"info","msg":"set cache success","time":"2024-09-10T17:07:40+08:00"}

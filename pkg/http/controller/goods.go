@@ -2,6 +2,7 @@ package controller
 
 import (
 	"crypto/rand"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"math/big"
@@ -12,6 +13,7 @@ import (
 	"gorm.io/gorm"
 
 	"smile.expression/destiny/logger"
+	"smile.expression/destiny/pkg/cache"
 	"smile.expression/destiny/pkg/database"
 	"smile.expression/destiny/pkg/database/model"
 )
@@ -31,14 +33,16 @@ type SingleIdle struct {
 }
 
 type GoodsController struct {
-	r  *gin.Engine
-	db *gorm.DB
+	r           *gin.Engine
+	db          *gorm.DB
+	cacheClient *cache.Client
 }
 
-func NewGoodsController(r *gin.Engine, db *gorm.DB) *GoodsController {
+func NewGoodsController(r *gin.Engine, db *gorm.DB, cacheClient *cache.Client) *GoodsController {
 	return &GoodsController{
-		r:  r,
-		db: db,
+		r:           r,
+		db:          db,
+		cacheClient: cacheClient,
 	}
 }
 
@@ -55,31 +59,40 @@ func (g *GoodsController) recent(c *gin.Context) {
 	)
 
 	num := c.DefaultQuery("limit", "4")
-	intNum, err := strconv.Atoi(num)
+	limit, err := strconv.Atoi(num)
 	if err != nil {
 		log.WithError(err).Error("fail to convert int")
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	var count int64
-	var ids []uint
-	g.db.Table("goods").Where("is_sold=?", false).Count(&count).Pluck("id", &ids)
-	if intNum > int(count) {
-		intNum = int(count) //让返回的数目不大于库存
+	// 缓存
+	key := fmt.Sprintf("recent_%d", limit)
+	var recentGoods []model.Goods
+
+	data, err := g.cacheClient.Get(ctx0, key)
+	if err == nil {
+		if err = json.Unmarshal(data, &recentGoods); err != nil {
+			log.WithError(err).Error("fail to unmarshal recent goods")
+		} else {
+			c.JSON(http.StatusOK, gin.H{"result": recentGoods})
+			return
+		}
 	}
 
-	var recentGoods = make([]model.Goods, intNum)
-
-	for i := int(count); i > int(count)-intNum; i-- {
-		g.db.Table("goods").Where("id = ? AND is_sold=?", ids[i-1], false).Find(&recentGoods[int(count)-i])
+	if err = g.db.Where("is_sold = ?", false).Order("created_at DESC").Limit(limit).Find(&recentGoods).Error; err != nil {
+		log.WithError(err).Error("fail to get recent goods")
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
-	c.JSON(200, gin.H{
-		"code":   "1",
-		"msg":    "获取最近发布成功",
-		"result": recentGoods,
-	})
+	cacheData, err := json.Marshal(recentGoods)
+	if err = g.cacheClient.Set(ctx0, key, cacheData); err != nil {
+		log.WithError(err).Error("fail to cache recent goods")
+	}
+
+	c.JSON(http.StatusOK, gin.H{"result": recentGoods})
+	return
 }
 
 func GetGoods(ctx *gin.Context) {
