@@ -23,6 +23,7 @@ type App struct {
 	db                *gorm.DB
 	storageClient     *storage.Client
 	cacheClient       *cache.Client
+	authController    *controller.AuthController
 	userController    *controller.UserController
 	storageController *controller.StorageController
 	bannerController  *controller.BannerController
@@ -35,6 +36,7 @@ type Options struct {
 	CacheOptions            *cache.Options                      `json:"cacheOptions"`
 	GoodsControllerOptions  *controller.GoodsControllerOptions  `json:"goodsControllerOptions"`
 	BannerControllerOptions *controller.BannerControllerOptions `json:"bannerControllerOptions"`
+	AuthControllerOptions   *controller.AuthControllerOptions   `json:"authControllerOptions"`
 }
 
 func (a *App) Init() {
@@ -65,6 +67,8 @@ func (a *App) serve() {
 	a.r.Use(middleware.CORSMiddleware(), middleware.RecoveryMiddleware())
 	a.r.Use(middleware.GenerateRequestID(), middleware.SetRequestID())
 
+	a.authController = controller.NewAuthController(a.options.AuthControllerOptions, a.cacheClient, a.db)
+
 	// user controller
 	a.userController = controller.NewUserController(a.r, a.db)
 	a.userController.Register()
@@ -78,7 +82,7 @@ func (a *App) serve() {
 	a.bannerController.Register()
 
 	// goods controller
-	a.goodsController = controller.NewGoodsController(a.options.GoodsControllerOptions, a.r, a.db, a.cacheClient, a.storageClient)
+	a.goodsController = controller.NewGoodsController(a.options.GoodsControllerOptions, a.r, a.db, a.cacheClient, a.storageClient, a.authController)
 	a.goodsController.Register()
 
 	a.r = routes.CollectRoute(a.r)

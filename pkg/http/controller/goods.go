@@ -29,11 +29,12 @@ type SingleIdle struct {
 }
 
 type GoodsController struct {
-	options       *GoodsControllerOptions
-	r             *gin.Engine
-	db            *gorm.DB
-	cacheClient   *cache.Client
-	storageClient *storage.Client
+	options        *GoodsControllerOptions
+	r              *gin.Engine
+	db             *gorm.DB
+	cacheClient    *cache.Client
+	storageClient  *storage.Client
+	authController *AuthController
 }
 
 type GoodsControllerOptions struct {
@@ -42,13 +43,14 @@ type GoodsControllerOptions struct {
 	CacheExpiration int `json:"cacheExpiration"`
 }
 
-func NewGoodsController(options *GoodsControllerOptions, r *gin.Engine, db *gorm.DB, cacheClient *cache.Client, storageClient *storage.Client) *GoodsController {
+func NewGoodsController(options *GoodsControllerOptions, r *gin.Engine, db *gorm.DB, cacheClient *cache.Client, storageClient *storage.Client, authController *AuthController) *GoodsController {
 	return &GoodsController{
-		options:       options,
-		r:             r,
-		db:            db,
-		cacheClient:   cacheClient,
-		storageClient: storageClient,
+		options:        options,
+		r:              r,
+		db:             db,
+		cacheClient:    cacheClient,
+		storageClient:  storageClient,
+		authController: authController,
 	}
 }
 
@@ -60,7 +62,7 @@ func (c *GoodsController) Register() {
 
 	rg2 := c.r.Group("/member")
 
-	rg2.POST("/release", c.release)
+	rg2.POST("/release", c.authController.AuthMiddleware(), c.release)
 }
 
 func (c *GoodsController) release(ctx *gin.Context) {
@@ -75,7 +77,7 @@ func (c *GoodsController) release(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "need to login"})
 		return
 	}
-	userInfo := user.(model.User)
+	userInfo := user.(*model.User)
 
 	//绑定body
 	var goodInfo GoodInfo
@@ -109,7 +111,7 @@ func (c *GoodsController) release(ctx *gin.Context) {
 	}
 
 	for i := 0; i < len(goodInfo.Picture); i++ {
-		field := fmt.Sprintf("picture%d", i+1)
+		field := fmt.Sprintf("Picture%d", i+1)
 		reflect.ValueOf(&picture).Elem().FieldByName(field).SetString(goodInfo.Picture[i])
 	}
 
@@ -119,37 +121,10 @@ func (c *GoodsController) release(ctx *gin.Context) {
 		return
 	}
 
-	////有点蠢的 当前picture表项添加多张图片
-	//pictureNum := len(goodInfo.Picture)
-	//switch pictureNum {
-	//case 2:
-	//	c.db.Model(&picture).Where("good_id=?", goodId).Select("picture2").Updates(map[string]interface{}{
-	//		"picture2": goodInfo.Picture[1],
-	//	})
-	//case 3:
-	//	c.db.Model(&picture).Where("good_id=?", goodId).Select("picture2", "picture3").Updates(map[string]interface{}{
-	//		"picture2": goodInfo.Picture[1],
-	//		"picture3": goodInfo.Picture[2],
-	//	})
-	//case 4:
-	//	c.db.Model(&picture).Where("good_id=?", goodId).Select("picture2", "picture3", "picture4").Updates(map[string]interface{}{
-	//		"picture2": goodInfo.Picture[1],
-	//		"picture3": goodInfo.Picture[2],
-	//		"picture4": goodInfo.Picture[3],
-	//	})
-	//case 5:
-	//	c.db.Model(&picture).Where("good_id=?", goodId).Select("picture2", "picture3", "picture4", "picture5").Updates(map[string]interface{}{
-	//		"picture2": goodInfo.Picture[1],
-	//		"picture3": goodInfo.Picture[2],
-	//		"picture4": goodInfo.Picture[3],
-	//		"picture5": goodInfo.Picture[4],
-	//	})
-	//
-	//}
-
 	ctx.JSON(http.StatusOK, gin.H{
 		"result": "ok",
 	})
+	return
 }
 
 func (c *GoodsController) goods(ctx *gin.Context) {

@@ -407,3 +407,22 @@
 {"X-Request-ID":"51620ce2-1bfc-4c8b-83ff-f34896aa8d08","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T13:31:23+08:00"}
 {"X-Request-ID":"e65f7277-5eae-447c-99a2-2ca565495fa7","error":"context canceled","level":"error","msg":"get cache fail: home/goods_4","time":"2024-09-11T13:31:34+08:00"}
 {"X-Request-ID":"e65f7277-5eae-447c-99a2-2ca565495fa7","error":"context canceled","level":"error","msg":"redis set home goods error","time":"2024-09-11T13:31:50+08:00"}
+{"X-Request-ID":"ca08d8ca-799b-4203-8925-013e9e63f605","level":"error","msg":"need to login","time":"2024-09-11T14:53:08+08:00"}
+{"X-Request-ID":"c34b9723-eb23-4863-89ed-ab5a7a8ee19c","error":"redis: nil","level":"info","msg":"get cache miss: user_43","time":"2024-09-11T15:31:32+08:00"}
+{"X-Request-ID":"c34b9723-eb23-4863-89ed-ab5a7a8ee19c","level":"info","msg":"set cache success: user_43","time":"2024-09-11T15:32:07+08:00"}
+{"X-Request-ID":"c41e9dd4-7b45-47a3-8401-38bd0c2f738c","level":"info","msg":"get cache success: user_43","time":"2024-09-11T15:32:38+08:00"}
+{"X-Request-ID":"5917945f-b476-44a3-b74b-6d62104f6d42","level":"info","msg":"get cache success: user_43","time":"2024-09-11T15:33:24+08:00"}
+{"X-Request-ID":"6a90e593-d89c-4ecb-a525-6ccc9ed7120a","level":"info","msg":"get cache success: user_43","time":"2024-09-11T15:35:10+08:00"}
+{"X-Request-ID":"6a90e593-d89c-4ecb-a525-6ccc9ed7120a","level":"info","msg":"set cache success: user_43","time":"2024-09-11T15:35:20+08:00"}
+{"X-Request-ID":"ddb9f09a-4c74-46e8-b7c8-e8712a0e2562","level":"info","msg":"get cache success: user_43","time":"2024-09-11T15:35:59+08:00"}
+{"X-Request-ID":"ddb9f09a-4c74-46e8-b7c8-e8712a0e2562","level":"info","msg":"set cache success: user_43","time":"2024-09-11T15:35:59+08:00"}
+{"X-Request-ID":"482e481f-c5a1-4d78-8d84-2bcb0e86b0f5","level":"info","msg":"get cache success: user_43","time":"2024-09-11T15:36:06+08:00"}
+{"X-Request-ID":"482e481f-c5a1-4d78-8d84-2bcb0e86b0f5","level":"info","msg":"set cache success: user_43","time":"2024-09-11T15:36:06+08:00"}
+{"X-Request-ID":"1974295e-bf80-4509-814b-d59ad25c14c7","level":"info","msg":"get cache success: user_43","time":"2024-09-11T15:46:19+08:00"}
+{"X-Request-ID":"1974295e-bf80-4509-814b-d59ad25c14c7","level":"info","msg":"set cache success: user_43","time":"2024-09-11T15:46:19+08:00"}
+{"X-Request-ID":"6d2c4e62-f18f-4ed9-ae92-8676add09ee3","level":"info","msg":"get cache success: user_43","time":"2024-09-11T15:46:45+08:00"}
+{"X-Request-ID":"8903636b-0017-4f63-baab-3594fa79d47e","level":"info","msg":"get cache success: user_43","time":"2024-09-11T15:48:13+08:00"}
+{"X-Request-ID":"8903636b-0017-4f63-baab-3594fa79d47e","level":"info","msg":"set cache success: user_43","time":"2024-09-11T15:48:13+08:00"}
+{"X-Request-ID":"36434695-da74-4189-be3f-0838de0fc78d","level":"info","msg":"get cache success: user_43","time":"2024-09-11T15:50:53+08:00"}
+{"X-Request-ID":"17809c05-1525-4b4d-bda9-16c77637e1c3","level":"info","msg":"get cache success: user_43","time":"2024-09-11T15:51:02+08:00"}
+{"X-Request-ID":"90b35974-ea2e-492b-931c-276c3a660a99","level":"info","msg":"get cache success: user_43","time":"2024-09-11T15:51:45+08:00"}

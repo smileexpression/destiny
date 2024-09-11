@@ -1,8 +1,9 @@
 package constant
 
 const (
-	ContentType = "Content-Type"
-	XRequestID  = "X-Request-ID"
+	ContentType   = "Content-Type"
+	XRequestID    = "X-Request-ID"
+	Authorization = "Authorization"
 
 	Route = "route"
 

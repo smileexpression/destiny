@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"smile.expression/destiny/pkg/http/controller"
-	"smile.expression/destiny/pkg/http/middleware"
 )
 
 func CollectRoute(r *gin.Engine) *gin.Engine {
@@ -15,7 +14,7 @@ func CollectRoute(r *gin.Engine) *gin.Engine {
 
 	r.POST("/login", controller.Login)
 	//r.POST("/register", controller.register)
-	r.GET("/info", middleware.AuthMiddleware(), controller.Info)
+	r.GET("/info", controller.AuthMiddleware(), controller.Info)
 
 	//home := r.Group("home")
 	//{
@@ -26,40 +25,40 @@ func CollectRoute(r *gin.Engine) *gin.Engine {
 	//}
 	member := r.Group("member")
 	{
-		member.POST("/order", middleware.AuthMiddleware(), controller.CreateOrder)
-		member.GET("/order/:id", middleware.AuthMiddleware(), controller.GetOrder)
+		member.POST("/order", controller.AuthMiddleware(), controller.CreateOrder)
+		member.GET("/order/:id", controller.AuthMiddleware(), controller.GetOrder)
 		//member.POST("/release", middleware.AuthMiddleware(), controller.release)
-		member.GET("/order/pre", middleware.AuthMiddleware(), controller.GetFromCart)
-		member.POST("/update_avatar", middleware.AuthMiddleware(), controller.UpdateAvatar)
-		member.POST("/change_password", middleware.AuthMiddleware(), controller.ChangePassword)
-		member.POST("/change_info", middleware.AuthMiddleware(), controller.ChangeInfo)
-		member.POST("/add_address", middleware.AuthMiddleware(), controller.AddAddress)
-		member.POST("/del_address", middleware.AuthMiddleware(), controller.DeleteAddress)
-		member.GET("/sold_order", middleware.AuthMiddleware(), controller.SoldList)
-		member.GET("/get_order", middleware.AuthMiddleware(), controller.BoughtList)
-		member.GET("/remain", middleware.AuthMiddleware(), controller.SaleList)
+		member.GET("/order/pre", controller.AuthMiddleware(), controller.GetFromCart)
+		member.POST("/update_avatar", controller.AuthMiddleware(), controller.UpdateAvatar)
+		member.POST("/change_password", controller.AuthMiddleware(), controller.ChangePassword)
+		member.POST("/change_info", controller.AuthMiddleware(), controller.ChangeInfo)
+		member.POST("/add_address", controller.AuthMiddleware(), controller.AddAddress)
+		member.POST("/del_address", controller.AuthMiddleware(), controller.DeleteAddress)
+		member.GET("/sold_order", controller.AuthMiddleware(), controller.SoldList)
+		member.GET("/get_order", controller.AuthMiddleware(), controller.BoughtList)
+		member.GET("/remain", controller.AuthMiddleware(), controller.SaleList)
 	}
 
 	goods := r.Group("")
 	{
 		goods.GET("/goods", controller.GetOneGood)
-		goods.GET("/goods/relevant", middleware.AuthMiddleware(), controller.RecommendGoods)
+		goods.GET("/goods/relevant", controller.AuthMiddleware(), controller.RecommendGoods)
 	}
 
 	chatList := r.Group("chat")
 	{
-		chatList.GET("/get_msg", middleware.AuthMiddleware(), controller.GetMsg)
-		chatList.POST("/send_msg", middleware.AuthMiddleware(), controller.SendMsg)
-		chatList.POST("/add_chat", middleware.AuthMiddleware(), controller.AddChat)
+		chatList.GET("/get_msg", controller.AuthMiddleware(), controller.GetMsg)
+		chatList.POST("/send_msg", controller.AuthMiddleware(), controller.SendMsg)
+		chatList.POST("/add_chat", controller.AuthMiddleware(), controller.AddChat)
 	}
 
 	//member路由完善后可以将下面这个路由整合
 	CartGroup := r.Group("member/cart")
 	{
-		CartGroup.POST("/add", middleware.AuthMiddleware(), controller.CartIn)
-		CartGroup.GET("/pull", middleware.AuthMiddleware(), controller.CartOut)
-		CartGroup.DELETE("/del", middleware.AuthMiddleware(), controller.CartDel)
-		CartGroup.DELETE("/del2", middleware.AuthMiddleware(), controller.CartDelOne)
+		CartGroup.POST("/add", controller.AuthMiddleware(), controller.CartIn)
+		CartGroup.GET("/pull", controller.AuthMiddleware(), controller.CartOut)
+		CartGroup.DELETE("/del", controller.AuthMiddleware(), controller.CartDel)
+		CartGroup.DELETE("/del2", controller.AuthMiddleware(), controller.CartDelOne)
 	}
 
 	//imageRoutes := r.Group("/image")
