@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"math/big"
 	"net/http"
+	"reflect"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -56,13 +57,22 @@ func (c *GoodsController) Register() {
 
 	rg.GET("new", c.new)
 	rg.GET("goods", c.goods)
+
+	rg2 := c.r.Group("/member")
+
+	rg2.POST("/release", c.release)
 }
 
-func Release(ctx *gin.Context) {
+func (c *GoodsController) release(ctx *gin.Context) {
+	var (
+		ctx0 = ctx.Request.Context()
+		log  = logger.SmileLog.WithContext(ctx0)
+	)
 
-	user, isExist := ctx.Get("user")
-	if !isExist {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"msg": "user not exist"})
+	user, exists := ctx.Get("user")
+	if !exists {
+		log.Error("need to login")
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "need to login"})
 		return
 	}
 	userInfo := user.(model.User)
@@ -76,77 +86,69 @@ func Release(ctx *gin.Context) {
 		return
 	}
 
-	DB := database.GetDB()
-
 	//生成good
-	userId := strconv.Itoa(int(userInfo.ID)) //之前将good表的User字段定义成了string
 	good := model.Goods{
 		CateId:      goodInfo.CateId,
-		User:        userId, //之前将good表的User字段定义成了string
+		User:        strconv.Itoa(int(userInfo.ID)), //之前将good表的User字段定义成了string
 		Name:        goodInfo.Name,
 		Picture:     goodInfo.Picture[0],
 		Price:       goodInfo.Price,
 		Description: goodInfo.Description,
 		IsSold:      false,
 	}
-	if err := DB.Create(&good).Error; err != nil {
-		fmt.Println("插入失败", err)
+	if err := c.db.Create(&good).Error; err != nil {
+		log.WithError(err).Error("mysql create goods failed")
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "mysql create goods failed"})
 		return
 	}
 
 	//生成good对应的picture
 	goodId := strconv.Itoa(int(good.ID)) //之前将picture表goodId字段定义成了string
 	picture := model.Picture{
-		GoodId:   goodId,
-		Picture1: goodInfo.Picture[0],
+		GoodId: goodId,
 	}
-	if err := DB.Select("good_id", "picture1").Create(&picture).Error; err != nil {
-		fmt.Println("插入失败", err)
+
+	for i := 0; i < len(goodInfo.Picture); i++ {
+		field := fmt.Sprintf("picture%d", i+1)
+		reflect.ValueOf(&picture).Elem().FieldByName(field).SetString(goodInfo.Picture[i])
+	}
+
+	if err := c.db.Create(&picture).Error; err != nil {
+		log.WithError(err).Error("mysql create picture failed")
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "mysql create picture failed"})
 		return
 	}
 
-	//有点蠢的 当前picture表项添加多张图片
-	pictureNum := len(goodInfo.Picture)
-	switch pictureNum {
-	case 2:
-		DB.Model(&picture).Where("good_id=?", goodId).Select("picture2").Updates(map[string]interface{}{
-			"picture2": goodInfo.Picture[1],
-		})
-	case 3:
-		DB.Model(&picture).Where("good_id=?", goodId).Select("picture2", "picture3").Updates(map[string]interface{}{
-			"picture2": goodInfo.Picture[1],
-			"picture3": goodInfo.Picture[2],
-		})
-	case 4:
-		DB.Model(&picture).Where("good_id=?", goodId).Select("picture2", "picture3", "picture4").Updates(map[string]interface{}{
-			"picture2": goodInfo.Picture[1],
-			"picture3": goodInfo.Picture[2],
-			"picture4": goodInfo.Picture[3],
-		})
-	case 5:
-		DB.Model(&picture).Where("good_id=?", goodId).Select("picture2", "picture3", "picture4", "picture5").Updates(map[string]interface{}{
-			"picture2": goodInfo.Picture[1],
-			"picture3": goodInfo.Picture[2],
-			"picture4": goodInfo.Picture[3],
-			"picture5": goodInfo.Picture[4],
-		})
+	////有点蠢的 当前picture表项添加多张图片
+	//pictureNum := len(goodInfo.Picture)
+	//switch pictureNum {
+	//case 2:
+	//	c.db.Model(&picture).Where("good_id=?", goodId).Select("picture2").Updates(map[string]interface{}{
+	//		"picture2": goodInfo.Picture[1],
+	//	})
+	//case 3:
+	//	c.db.Model(&picture).Where("good_id=?", goodId).Select("picture2", "picture3").Updates(map[string]interface{}{
+	//		"picture2": goodInfo.Picture[1],
+	//		"picture3": goodInfo.Picture[2],
+	//	})
+	//case 4:
+	//	c.db.Model(&picture).Where("good_id=?", goodId).Select("picture2", "picture3", "picture4").Updates(map[string]interface{}{
+	//		"picture2": goodInfo.Picture[1],
+	//		"picture3": goodInfo.Picture[2],
+	//		"picture4": goodInfo.Picture[3],
+	//	})
+	//case 5:
+	//	c.db.Model(&picture).Where("good_id=?", goodId).Select("picture2", "picture3", "picture4", "picture5").Updates(map[string]interface{}{
+	//		"picture2": goodInfo.Picture[1],
+	//		"picture3": goodInfo.Picture[2],
+	//		"picture4": goodInfo.Picture[3],
+	//		"picture5": goodInfo.Picture[4],
+	//	})
+	//
+	//}
 
-	}
-	// if pictureNum > 1 {
-	// 	DB.Model(&picture).Update("picture2", goodInfo.Picture[1])
-	// 	if pictureNum > 2 {
-	// 		DB.Model(&picture).Update("picture3", goodInfo.Picture[2])
-	// 		if pictureNum > 3 {
-	// 			DB.Model(&picture).Update("picture4", goodInfo.Picture[3])
-	// 			if pictureNum > 4 {
-	// 				DB.Model(&picture).Update("picture5", goodInfo.Picture[4])
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-	ctx.JSON(200, gin.H{
-		"result": "Succeed",
+	ctx.JSON(http.StatusOK, gin.H{
+		"result": "ok",
 	})
 }
 

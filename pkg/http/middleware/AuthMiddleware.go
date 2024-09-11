@@ -2,12 +2,12 @@ package middleware
 
 import (
 	"net/http"
-	"smile.expression/destiny/pkg/database"
-	"smile.expression/destiny/pkg/database/model"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 
+	"smile.expression/destiny/pkg/database"
+	"smile.expression/destiny/pkg/database/model"
 	"smile.expression/destiny/pkg/utils"
 )
 
