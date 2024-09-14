@@ -13,22 +13,25 @@ import (
 	"gorm.io/gorm"
 
 	"smile.expression/destiny/pkg/constant"
+	"smile.expression/destiny/pkg/database/model"
 	"smile.expression/destiny/pkg/http/api"
 	"smile.expression/destiny/pkg/logger"
 	"smile.expression/destiny/pkg/storage"
 )
 
 type StorageController struct {
-	r             *gin.Engine
-	db            *gorm.DB
-	storageClient *storage.Client
+	r              *gin.Engine
+	db             *gorm.DB
+	storageClient  *storage.Client
+	authController *AuthController
 }
 
-func NewStorageController(r *gin.Engine, db *gorm.DB, storageClient *storage.Client) *StorageController {
+func NewStorageController(r *gin.Engine, db *gorm.DB, storageClient *storage.Client, authController *AuthController) *StorageController {
 	return &StorageController{
-		r:             r,
-		db:            db,
-		storageClient: storageClient,
+		r:              r,
+		db:             db,
+		storageClient:  storageClient,
+		authController: authController,
 	}
 }
 
@@ -39,7 +42,7 @@ func (c *StorageController) Register() {
 	rg.DELETE("/remove", c.remove)
 
 	rg2 := c.r.Group("/image")
-	rg2.POST("/upload", c.multiUpload)
+	rg2.POST("/upload", c.authController.AuthMiddleware(), c.multiUpload)
 	rg2.GET("/get", c.get)
 	rg2.DELETE("/delete", c.delete)
 }
@@ -57,9 +60,13 @@ func (c *StorageController) multiUpload(ctx *gin.Context) {
 		log  = logger.SmileLog.WithContext(ctx0)
 	)
 
-	username := ctx.GetString("user")
-	// TODO test
-	username = "smile"
+	user, exists := ctx.Get("user")
+	if !exists {
+		log.Error("need to login")
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "need to login"})
+		return
+	}
+	userInfo := user.(*model.User)
 	// 使用c.MultipartForm()从上下文中检索多部分表单数据
 	form, err := ctx.MultipartForm()
 	if err != nil {
@@ -83,7 +90,7 @@ func (c *StorageController) multiUpload(ctx *gin.Context) {
 			}
 
 			var resp *api.PutObjectResponse
-			objectName := fmt.Sprintf("%s/%s/%s", username, time.Now().Format("2006-01-02"), uuid.New().String())
+			objectName := fmt.Sprintf("%s/%s/%s", userInfo.Name, time.Now().Format("2006-01-02"), uuid.New().String())
 			resp, err = c.storageClient.PutObject(ctx0, "picture", objectName, content, fileHeader.Size, minio.PutObjectOptions{
 				ContentType: fileHeader.Header.Get(constant.ContentType),
 			})

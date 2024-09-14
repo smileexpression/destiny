@@ -488,3 +488,30 @@
 {"X-Request-ID":"501d818e-77a6-4313-a885-5d9714567f14","level":"info","msg":"get cache success: home/banner","time":"2024-09-11T19:19:48+08:00"}
 {"X-Request-ID":"84bdff1f-5e7e-4384-86ae-166a3f7c6356","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:48+08:00"}
 {"X-Request-ID":"f42af20c-6a57-4875-84d5-6cbed873f25c","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:48+08:00"}
+{"error":"Put \"http://localhost:9000/picture/\": dial tcp [::1]:9000: connect: connection refused","level":"error","msg":"Failed to create bucket: picture","time":"2024-09-14T13:59:14+08:00"}
+{"X-Request-ID":"fd804d6d-44a8-4b94-9ec9-a951838cd395","error":"redis: nil","level":"info","msg":"get cache miss: user_43","time":"2024-09-14T14:03:40+08:00"}
+{"X-Request-ID":"fd804d6d-44a8-4b94-9ec9-a951838cd395","level":"info","msg":"set cache success: user_43","time":"2024-09-14T14:03:53+08:00"}
+{"X-Request-ID":"93647b31-219f-4725-bf97-0e53bd50cbc5","error":"request Content-Type isn't multipart/form-data","level":"error","msg":"error getting file from form","time":"2024-09-14T14:04:39+08:00"}
+{"X-Request-ID":"747db778-d1cd-4d6f-a617-cb9e1dcad611","error":"request Content-Type isn't multipart/form-data","level":"error","msg":"failed to parse multipart form","time":"2024-09-14T14:05:30+08:00"}
+{"X-Request-ID":"f0c5830f-01b1-4e66-b67b-fedba9179100","error":"request Content-Type isn't multipart/form-data","level":"error","msg":"failed to parse multipart form","time":"2024-09-14T14:05:55+08:00"}
+{"X-Request-ID":"d44181f8-ef65-456a-8de2-54ef1a59808e","level":"info","msg":"get cache success: user_43","time":"2024-09-14T14:09:22+08:00"}
+{"X-Request-ID":"d44181f8-ef65-456a-8de2-54ef1a59808e","error":"request Content-Type isn't multipart/form-data","level":"error","msg":"failed to parse multipart form","time":"2024-09-14T14:09:27+08:00"}
+{"X-Request-ID":"13411163-e502-41f0-8560-537334ec427e","level":"info","msg":"get cache success: user_43","time":"2024-09-14T14:09:54+08:00"}
+{"X-Request-ID":"13411163-e502-41f0-8560-537334ec427e","error":"request Content-Type isn't multipart/form-data","level":"error","msg":"failed to parse multipart form","time":"2024-09-14T14:10:05+08:00"}
+{"X-Request-ID":"6814ba91-e2c8-468f-bf37-56b9bedaa7d9","level":"info","msg":"get cache success: user_43","time":"2024-09-14T14:10:56+08:00"}
+{"X-Request-ID":"6814ba91-e2c8-468f-bf37-56b9bedaa7d9","error":"request Content-Type isn't multipart/form-data","level":"error","msg":"failed to parse multipart form","time":"2024-09-14T14:11:34+08:00"}
+{"X-Request-ID":"042920dd-82a4-45ce-b965-26bf7640a141","level":"info","msg":"get cache success: user_43","time":"2024-09-14T14:43:43+08:00"}
+{"X-Request-ID":"042920dd-82a4-45ce-b965-26bf7640a141","error":"request Content-Type isn't multipart/form-data","level":"error","msg":"failed to parse multipart form","time":"2024-09-14T14:43:48+08:00"}
+{"X-Request-ID":"7fddcc23-ddc1-48cb-8781-9b464860c562","level":"info","msg":"get cache success: user_43","time":"2024-09-14T14:43:48+08:00"}
+{"X-Request-ID":"7fddcc23-ddc1-48cb-8781-9b464860c562","error":"request Content-Type isn't multipart/form-data","level":"error","msg":"failed to parse multipart form","time":"2024-09-14T14:43:50+08:00"}
+{"X-Request-ID":"cc665593-a653-4b0f-bac1-63fc03cdcb80","level":"info","msg":"get cache success: user_43","time":"2024-09-14T14:43:50+08:00"}
+{"X-Request-ID":"cc665593-a653-4b0f-bac1-63fc03cdcb80","error":"request Content-Type isn't multipart/form-data","level":"error","msg":"failed to parse multipart form","time":"2024-09-14T14:43:50+08:00"}
+{"X-Request-ID":"b0b7d978-5a79-4e81-abc0-ba9a176a4f72","level":"info","msg":"get cache success: user_43","time":"2024-09-14T14:43:50+08:00"}
+{"X-Request-ID":"b0b7d978-5a79-4e81-abc0-ba9a176a4f72","error":"request Content-Type isn't multipart/form-data","level":"error","msg":"failed to parse multipart form","time":"2024-09-14T14:43:51+08:00"}
+{"X-Request-ID":"11219a00-2b29-4e7a-962a-7588315c128b","level":"info","msg":"get cache success: user_43","time":"2024-09-14T14:44:23+08:00"}
+{"X-Request-ID":"fb86738c-0a58-4dfd-a1d0-afbbd8c4254c","level":"info","msg":"get cache success: user_43","time":"2024-09-14T14:44:54+08:00"}
+{"X-Request-ID":"0ce5bd61-25b7-4baa-822c-f12c7481de7e","level":"info","msg":"get cache success: user_43","time":"2024-09-14T14:59:04+08:00"}
+{"X-Request-ID":"28c6750a-b917-4584-af1b-0d3b93dffe3e","level":"info","msg":"get cache success: user_43","time":"2024-09-14T14:59:38+08:00"}
+{"X-Request-ID":"fd4b0c76-8086-4403-8232-2e9782604788","level":"info","msg":"get cache success: user_43","time":"2024-09-14T14:59:57+08:00"}
+{"X-Request-ID":"46b995e6-9996-4abc-adb1-93ccb01011a7","level":"info","msg":"get cache success: user_43","time":"2024-09-14T15:01:46+08:00"}
+{"X-Request-ID":"46b995e6-9996-4abc-adb1-93ccb01011a7","bucket":"picture","level":"info","msg":"PutObject success","object":"smile/2024-09-14/97da7783-0c78-4928-8023-1128207a802c","route":"PutObject","size":34775,"time":"2024-09-14T15:02:07+08:00"}

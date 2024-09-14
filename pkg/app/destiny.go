@@ -74,7 +74,7 @@ func (a *App) serve() {
 	a.userController.Register()
 
 	// storage controller
-	a.storageController = controller.NewStorageController(a.r, a.db, a.storageClient)
+	a.storageController = controller.NewStorageController(a.r, a.db, a.storageClient, a.authController)
 	a.storageController.Register()
 
 	// banner controller
