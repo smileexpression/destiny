@@ -10,10 +10,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 
-	"smile.expression/destiny/logger"
 	"smile.expression/destiny/pkg/database"
 	"smile.expression/destiny/pkg/database/model"
 	"smile.expression/destiny/pkg/http/api"
+	"smile.expression/destiny/pkg/logger"
 	"smile.expression/destiny/pkg/utils"
 )
 

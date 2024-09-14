@@ -7,7 +7,7 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	"smile.expression/destiny/logger"
+	"smile.expression/destiny/pkg/logger"
 )
 
 type Client struct {

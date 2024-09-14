@@ -44,7 +44,7 @@ func NewLogger() *SmileLogger {
 	logger.SetLevel(logrus.InfoLevel)
 
 	// 添加一个输出目标，比如 os.Stdout
-	file, err := os.OpenFile("logger/logfile.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	file, err := os.OpenFile("pkg/logger/logfile.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		panic(err)
 	}

@@ -8,12 +8,13 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/minio/minio-go/v7"
 	"gorm.io/gorm"
 
-	"smile.expression/destiny/logger"
 	"smile.expression/destiny/pkg/constant"
 	"smile.expression/destiny/pkg/http/api"
+	"smile.expression/destiny/pkg/logger"
 	"smile.expression/destiny/pkg/storage"
 )
 
@@ -82,7 +83,7 @@ func (c *StorageController) multiUpload(ctx *gin.Context) {
 			}
 
 			var resp *api.PutObjectResponse
-			objectName := fmt.Sprintf("%s/%s/%s", username, time.Now().Format("2006-01-02"), fileHeader.Filename)
+			objectName := fmt.Sprintf("%s/%s/%s", username, time.Now().Format("2006-01-02"), uuid.New().String())
 			resp, err = c.storageClient.PutObject(ctx0, "picture", objectName, content, fileHeader.Size, minio.PutObjectOptions{
 				ContentType: fileHeader.Header.Get(constant.ContentType),
 			})

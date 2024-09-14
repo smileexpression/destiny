@@ -1,8 +1,8 @@
 package main
 
 import (
-	"smile.expression/destiny/logger"
 	"smile.expression/destiny/pkg/app"
+	"smile.expression/destiny/pkg/logger"
 )
 
 func main() {

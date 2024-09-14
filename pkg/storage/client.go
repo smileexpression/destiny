@@ -11,9 +11,9 @@ import (
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/sirupsen/logrus"
 
-	"smile.expression/destiny/logger"
 	"smile.expression/destiny/pkg/constant"
 	"smile.expression/destiny/pkg/http/api"
+	"smile.expression/destiny/pkg/logger"
 )
 
 type Client struct {

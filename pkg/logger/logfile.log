@@ -426,3 +426,65 @@
 {"X-Request-ID":"36434695-da74-4189-be3f-0838de0fc78d","level":"info","msg":"get cache success: user_43","time":"2024-09-11T15:50:53+08:00"}
 {"X-Request-ID":"17809c05-1525-4b4d-bda9-16c77637e1c3","level":"info","msg":"get cache success: user_43","time":"2024-09-11T15:51:02+08:00"}
 {"X-Request-ID":"90b35974-ea2e-492b-931c-276c3a660a99","level":"info","msg":"get cache success: user_43","time":"2024-09-11T15:51:45+08:00"}
+{"error":"Put \"http://localhost:9000/picture/\": dial tcp [::1]:9000: connect: connection refused","level":"error","msg":"Failed to create bucket: picture","time":"2024-09-11T16:13:02+08:00"}
+{"error":"Put \"http://localhost:9000/picture/\": dial tcp [::1]:9000: connect: connection refused","level":"error","msg":"Failed to create bucket: picture","time":"2024-09-11T19:06:04+08:00"}
+{"X-Request-ID":"a9d8731c-0765-42b6-8ccf-2bd8aa03ab85","error":"redis: nil","level":"info","msg":"get cache miss: home/banner","time":"2024-09-11T19:06:47+08:00"}
+{"X-Request-ID":"e2d04895-e4ea-49c5-b142-d8cf257ea47a","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-11T19:06:47+08:00"}
+{"X-Request-ID":"a9d8731c-0765-42b6-8ccf-2bd8aa03ab85","level":"info","msg":"set cache success: home/banner","time":"2024-09-11T19:06:47+08:00"}
+{"X-Request-ID":"e2d04895-e4ea-49c5-b142-d8cf257ea47a","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-11T19:06:47+08:00"}
+{"X-Request-ID":"1cc71e4d-4e55-4717-a35d-bfa6b2a1da30","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:06:47+08:00"}
+{"X-Request-ID":"9ebd5a02-3212-4372-a60c-ddd133bcacdf","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:06:52+08:00"}
+{"X-Request-ID":"5e9a39da-3faa-4e1f-a5f0-1401b0955822","bucket":"picture","level":"info","msg":"PutObject success","object":"smile/2024-09-11/0c910d21-106e-4c35-a0ad-4e9d2b4587f6","route":"PutObject","size":4324,"time":"2024-09-11T19:09:52+08:00"}
+{"X-Request-ID":"58f85460-d3c8-48fd-abed-67c612c1721e","bucket":"picture","level":"info","msg":"PutObject success","object":"smile/2024-09-11/7961fde3-0148-436d-bd8c-300c3db646d5","route":"PutObject","size":3378,"time":"2024-09-11T19:09:57+08:00"}
+{"X-Request-ID":"54e8a96a-9d63-47be-b887-e36a927f36b1","bucket":"picture","level":"info","msg":"PutObject success","object":"smile/2024-09-11/932c53e6-3d81-42cd-b2b2-65746a86c2b7","route":"PutObject","size":5994,"time":"2024-09-11T19:10:01+08:00"}
+{"X-Request-ID":"0d7ad888-27ea-4ecb-a55e-0e4f9af275ae","bucket":"picture","level":"info","msg":"PutObject success","object":"smile/2024-09-11/c184e21b-91d2-4ac2-aa3a-d4c478094d05","route":"PutObject","size":164744,"time":"2024-09-11T19:10:05+08:00"}
+{"X-Request-ID":"3065bdeb-d22f-4cb1-bda8-4d40bc5092f4","bucket":"picture","level":"info","msg":"PutObject success","object":"smile/2024-09-11/8ecac3fd-5705-442e-85df-2c89bc564dc5","route":"PutObject","size":28167,"time":"2024-09-11T19:10:07+08:00"}
+{"X-Request-ID":"c1c4d298-3f29-49a6-934a-6afedab8ab52","bucket":"picture","level":"info","msg":"RemoveObject success","object":"smile/2024-09-11/8ecac3fd-5705-442e-85df-2c89bc564dc5","route":"RemoveObject","time":"2024-09-11T19:10:09+08:00"}
+{"X-Request-ID":"2953a6d7-5e30-49b2-b61b-096cf194c509","level":"info","msg":"get cache success: user_43","time":"2024-09-11T19:10:51+08:00"}
+{"X-Request-ID":"3dd39b0a-203e-4129-b59c-905605ad92b7","level":"info","msg":"get cache success: user_43","time":"2024-09-11T19:11:49+08:00"}
+{"X-Request-ID":"575152c1-b772-4836-9653-8398fbb33c71","level":"info","msg":"get cache success: user_43","time":"2024-09-11T19:11:59+08:00"}
+{"X-Request-ID":"7f36e53f-a244-4fdf-8a19-10e296e627c8","error":"redis: nil","level":"info","msg":"get cache miss: home/banner","time":"2024-09-11T19:12:15+08:00"}
+{"X-Request-ID":"26d8b308-dd0e-4693-b616-5e15fda0d766","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-11T19:12:15+08:00"}
+{"X-Request-ID":"7f36e53f-a244-4fdf-8a19-10e296e627c8","level":"info","msg":"set cache success: home/banner","time":"2024-09-11T19:12:15+08:00"}
+{"X-Request-ID":"26d8b308-dd0e-4693-b616-5e15fda0d766","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-11T19:12:15+08:00"}
+{"X-Request-ID":"120e82bc-db82-4847-81bc-75fd839dc5a7","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:12:15+08:00"}
+{"X-Request-ID":"b7b06c2b-0d88-4127-881f-ceee14d7a9d3","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:12:19+08:00"}
+{"X-Request-ID":"0d65f9eb-8085-4a3d-906d-ba2e2ec42540","level":"info","msg":"get cache success: home/banner","time":"2024-09-11T19:12:28+08:00"}
+{"X-Request-ID":"aead7aa2-7666-4b6b-8891-9ee0bda256f4","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:12:28+08:00"}
+{"X-Request-ID":"0a5d2a6b-ed80-4964-871c-211d5c790ba9","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:12:28+08:00"}
+{"X-Request-ID":"65c56263-a25f-4e3d-b7fa-e18ede399ebf","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-11T19:13:58+08:00"}
+{"X-Request-ID":"65c56263-a25f-4e3d-b7fa-e18ede399ebf","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-11T19:13:58+08:00"}
+{"X-Request-ID":"5cb7b966-2fcf-4765-a99a-60e67fc064cb","bucket":"picture","level":"info","msg":"PutObject success","object":"smile/2024-09-11/e9f22a20-9865-46dc-a006-4ad64ba0bd55","route":"PutObject","size":7149,"time":"2024-09-11T19:14:41+08:00"}
+{"X-Request-ID":"55680e16-0044-4d6b-b69f-9dbde4cd2cf6","level":"info","msg":"get cache success: user_43","time":"2024-09-11T19:14:43+08:00"}
+{"X-Request-ID":"c025b2bc-84e1-4ff0-93ed-d95bbbb2cde5","level":"info","msg":"get cache success: user_43","time":"2024-09-11T19:15:17+08:00"}
+{"X-Request-ID":"01c2b3fc-5e90-479c-930c-03daba529028","bucket":"picture","level":"info","msg":"PutObject success","object":"smile/2024-09-11/c8afc6b9-5265-463c-b733-2431262a0924","route":"PutObject","size":50515,"time":"2024-09-11T19:16:09+08:00"}
+{"X-Request-ID":"68a0da54-526c-4674-b363-b3afc1e69a5e","level":"info","msg":"get cache success: user_43","time":"2024-09-11T19:16:14+08:00"}
+{"X-Request-ID":"f69b0afc-07fd-461d-abdc-877915a95786","bucket":"picture","level":"info","msg":"PutObject success","object":"smile/2024-09-11/e6ea609b-628d-4064-aa9a-034d1bf4c3b7","route":"PutObject","size":312754,"time":"2024-09-11T19:17:04+08:00"}
+{"X-Request-ID":"cd02e780-d4be-4877-bd6e-0ef140106fd7","level":"info","msg":"get cache success: user_43","time":"2024-09-11T19:17:10+08:00"}
+{"X-Request-ID":"63be340f-d3ef-4dcc-878d-802baf1a8317","bucket":"picture","level":"info","msg":"PutObject success","object":"smile/2024-09-11/0ddd26f7-0b72-4ddd-a02a-c229f7a80d6e","route":"PutObject","size":312754,"time":"2024-09-11T19:18:46+08:00"}
+{"X-Request-ID":"ba9f7c5a-7c7c-471d-8cf2-23626ef4eebb","level":"info","msg":"get cache success: user_43","time":"2024-09-11T19:18:55+08:00"}
+{"X-Request-ID":"b288cbab-fa94-465d-adc3-b84e8cb9ab8a","error":"redis: nil","level":"info","msg":"get cache miss: home/banner","time":"2024-09-11T19:18:55+08:00"}
+{"X-Request-ID":"1d72b369-7b31-4e7f-93d7-b8fb69db992f","error":"redis: nil","level":"info","msg":"get cache miss: home/goods_4","time":"2024-09-11T19:18:55+08:00"}
+{"X-Request-ID":"b288cbab-fa94-465d-adc3-b84e8cb9ab8a","level":"info","msg":"set cache success: home/banner","time":"2024-09-11T19:18:55+08:00"}
+{"X-Request-ID":"1d72b369-7b31-4e7f-93d7-b8fb69db992f","level":"info","msg":"set cache success: home/goods_4","time":"2024-09-11T19:18:56+08:00"}
+{"X-Request-ID":"56a577e3-9a8f-4979-916f-cfcf2b8df44d","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:18:56+08:00"}
+{"X-Request-ID":"3bc30ffc-2840-4e9b-bba9-c4883b468b39","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:11+08:00"}
+{"X-Request-ID":"15832db0-bc0e-4387-a2e0-19bf85fc2fab","level":"info","msg":"get cache success: home/banner","time":"2024-09-11T19:19:13+08:00"}
+{"X-Request-ID":"223b6321-e2b9-413a-8221-50e8954df073","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:13+08:00"}
+{"X-Request-ID":"927586d8-28dc-48c3-8f97-599fc82fa526","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:13+08:00"}
+{"X-Request-ID":"e56b6541-fd1a-4c0d-9b09-4da9931a214b","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:15+08:00"}
+{"X-Request-ID":"c6f51eeb-50c4-4291-a89c-5774edec1ac3","level":"info","msg":"get cache success: home/banner","time":"2024-09-11T19:19:18+08:00"}
+{"X-Request-ID":"1d67a783-f547-418d-aa1e-9907fb560545","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:18+08:00"}
+{"X-Request-ID":"e850c351-78b7-4688-8a41-81184d97ea7e","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:18+08:00"}
+{"X-Request-ID":"227e12fe-d51a-478a-9ccf-ed69d5bb2510","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:34+08:00"}
+{"X-Request-ID":"c2c9658c-5bc0-44bb-ac29-18ec73c6239e","level":"info","msg":"get cache success: home/banner","time":"2024-09-11T19:19:37+08:00"}
+{"X-Request-ID":"854d2f90-4b1c-4c42-b06d-7e221659f1a6","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:37+08:00"}
+{"X-Request-ID":"18cf86b4-fc54-423b-8e79-12b92275f94f","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:37+08:00"}
+{"X-Request-ID":"bc2d310a-1f4d-43d3-bd11-16e3730e1e75","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:39+08:00"}
+{"X-Request-ID":"cc54c49d-6eb8-49fc-93b9-3826e93f7c75","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:42+08:00"}
+{"X-Request-ID":"7d16d165-8963-45e0-83d6-94341a4c9b4b","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:43+08:00"}
+{"X-Request-ID":"354f1885-2bc2-4919-acab-693e231ec35f","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:46+08:00"}
+{"X-Request-ID":"ead3099b-e97d-4152-904e-3cbae771c1f5","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:46+08:00"}
+{"X-Request-ID":"501d818e-77a6-4313-a885-5d9714567f14","level":"info","msg":"get cache success: home/banner","time":"2024-09-11T19:19:48+08:00"}
+{"X-Request-ID":"84bdff1f-5e7e-4384-86ae-166a3f7c6356","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:48+08:00"}
+{"X-Request-ID":"f42af20c-6a57-4875-84d5-6cbed873f25c","level":"info","msg":"get cache success: home/goods_4","time":"2024-09-11T19:19:48+08:00"}

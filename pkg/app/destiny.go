@@ -8,12 +8,12 @@ import (
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
 
-	"smile.expression/destiny/logger"
 	"smile.expression/destiny/pkg/cache"
 	"smile.expression/destiny/pkg/database"
 	"smile.expression/destiny/pkg/http/controller"
 	"smile.expression/destiny/pkg/http/middleware"
 	"smile.expression/destiny/pkg/http/routes"
+	"smile.expression/destiny/pkg/logger"
 	"smile.expression/destiny/pkg/storage"
 )
 
