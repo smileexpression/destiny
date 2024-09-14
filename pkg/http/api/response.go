@@ -25,3 +25,13 @@ type Goods struct { // "_2" 区分于commodity controller的AllIdle
 	Picture string `gorm:"type:varchar(1024);not null"`
 	Goods   []model.Goods
 }
+
+type UserResponse struct {
+	ID          uint      `json:"id"`
+	Account     string    `json:"account"`
+	Token       string    `json:"token"`
+	Avatar      string    `json:"avatar"`
+	Nickname    string    `json:"nickname"`
+	Gender      string    `json:"gender"`
+	UserAddress []Address `json:"userAddresses"`
+}

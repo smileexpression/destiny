@@ -12,7 +12,7 @@ func CollectRoute(r *gin.Engine) *gin.Engine {
 		category.GET("/category", controller.ChooseCategory)
 	}
 
-	r.POST("/login", controller.Login)
+	//r.POST("/login", controller.login)
 	//r.POST("/register", controller.register)
 	r.GET("/info", controller.AuthMiddleware(), controller.Info)
 

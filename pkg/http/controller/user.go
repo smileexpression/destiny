@@ -30,49 +30,144 @@ func NewUserController(r *gin.Engine, db *gorm.DB) *UserController {
 }
 
 func (u *UserController) Register() {
-	rg := u.r.Group("/user")
+	rg := u.r.Group("")
 
+	rg.POST("/login", u.login)
 	rg.POST("/register", u.register)
 }
 
-// register 注册接口函数
-func (u *UserController) register(c *gin.Context) {
+// login 登录接口函数
+func (c *UserController) login(ctx *gin.Context) {
 	var (
-		ctx0 = c.Request.Context()
+		ctx0 = ctx.Request.Context()
+		log  = logger.SmileLog.WithContext(ctx0)
+	)
+
+	//获取参数
+	var receiveUser model.User
+	if err := ctx.BindJSON(&receiveUser); err != nil {
+		log.WithError(err).Error("login bind json error")
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "invalid json"})
+		return
+	}
+
+	//数据验证
+	if len(receiveUser.Telephone) != 11 {
+		log.Errorf("invalid telephone number: %s", receiveUser.Telephone)
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "invalid telephone number"})
+		return
+	}
+
+	if len(receiveUser.Password) < 6 || len(receiveUser.Password) > 14 {
+		log.Errorf("invalid password: %s", receiveUser.Password)
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "invalid password"})
+		return
+	}
+
+	//验证手机号对应的用户是否存在
+	var user model.User
+	if err := c.db.Where("telephone = ?", receiveUser.Telephone).First(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			log.WithError(err).Errorf("mysql not found user: %s", receiveUser.Telephone)
+			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"msg": "user not found"})
+		} else {
+			log.WithError(err).Errorf("mysql query error: %s", receiveUser.Telephone)
+			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "mysql query error"})
+		}
+		return
+	}
+
+	//验证密码是否正确
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(receiveUser.Password)); err != nil {
+		log.WithError(err).Errorf("password error: %s", receiveUser.Password)
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "password error"})
+		return
+	}
+
+	//发放token
+	token, err := utils.ReleaseToken(user)
+	if err != nil {
+		log.WithError(err).Error("release token error")
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "release token error"})
+		return
+	}
+
+	//获取user对应的所有地址
+	var addressArray []model.UserAddress
+	if err = c.db.Where("user_id = ?", user.ID).Find(&addressArray).Error; err != nil {
+		log.WithError(err).Errorf("mysql query user address error: %d", user.ID)
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "mysql query user address error"})
+		return
+	}
+
+	userResp := api.UserResponse{
+		ID:       user.ID,
+		Account:  user.Telephone,
+		Token:    token,
+		Avatar:   user.Avatar,
+		Nickname: user.Name,
+		Gender:   user.Gender,
+	}
+
+	if len(addressArray) > 0 {
+		//创建响应数组
+		var apiAddresses []api.Address
+		for _, address := range addressArray {
+			resAddress := api.Address{
+				AddressID: strconv.Itoa(int(address.ID)),
+				Receiver:  address.Receiver,
+				Contact:   address.Contact,
+				Address:   address.Address,
+			}
+			apiAddresses = append(apiAddresses, resAddress)
+		}
+		userResp.UserAddress = apiAddresses
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"result": userResp,
+	})
+	return
+}
+
+// register 注册接口函数
+func (u *UserController) register(ctx *gin.Context) {
+	var (
+		ctx0 = ctx.Request.Context()
 		log  = logger.SmileLog.WithContext(ctx0)
 	)
 
 	//获取数据
 	var receiveUser model.User
-	if err := c.BindJSON(&receiveUser); err != nil {
+	if err := ctx.BindJSON(&receiveUser); err != nil {
 		log.WithError(err).Error()
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	if len(receiveUser.Name) == 0 {
 		log.Errorf("invalid name: %s", receiveUser.Name)
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid name"})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid name"})
 		return
 	}
 
 	//账号密码基本数据长度验证
 	if len(receiveUser.Telephone) != 11 {
 		log.Errorf("invalid telephone number: %s", receiveUser.Telephone)
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid telephone number"})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid telephone number"})
 		return
 	}
 
 	if len(receiveUser.Password) < 6 || len(receiveUser.Password) > 14 {
 		log.Errorf("invalid password: %s", receiveUser.Password)
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid password"})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "invalid password"})
 		return
 	}
 
 	//验证手机号是否被注册过
 	if err := u.isTelephoneExist(receiveUser.Telephone); err != nil {
 		log.Errorf("telephone number exists: %s", receiveUser.Telephone)
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "telephone number exists"})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "telephone number exists"})
 		return
 	}
 
@@ -80,7 +175,7 @@ func (u *UserController) register(c *gin.Context) {
 	hashPassword, err := bcrypt.GenerateFromPassword([]byte(receiveUser.Password), bcrypt.DefaultCost)
 	if err != nil {
 		log.WithError(err).Error()
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -93,116 +188,20 @@ func (u *UserController) register(c *gin.Context) {
 	}
 	if err = u.db.Create(&newUser).Error; err != nil {
 		log.WithError(err).Error("create user failed")
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	//发放Token
 	token, err := utils.ReleaseToken(newUser)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"result": &api.RegisterResponse{
+	ctx.JSON(http.StatusOK, gin.H{"result": &api.RegisterResponse{
 		Token: token,
 	}})
-}
-
-// Login 登录接口函数
-func Login(ctx *gin.Context) {
-	//获取参数
-	DB := database.GetDB()
-	var receiveUser model.User
-	if err := ctx.BindJSON(&receiveUser); err != nil {
-		ctx.JSON(422, gin.H{"code": 422, "msg": "获取失败"})
-		return
-	}
-
-	//数据验证
-	if len(receiveUser.Telephone) != 11 {
-		ctx.JSON(422, gin.H{"code": 422, "msg": "手机号为11位"})
-		return
-	}
-	if len(receiveUser.Password) < 6 || len(receiveUser.Password) > 14 {
-		ctx.JSON(422, gin.H{"code": 422, "msg": "密码长度为6-14个字符"})
-		return
-	}
-
-	//验证手机号对应的用户是否存在
-	var user model.User
-	DB.Where("telephone = ?", receiveUser.Telephone).First(&user)
-	if user.ID == 0 {
-		ctx.JSON(422, gin.H{"code": 422, "msg": "用户不存在"})
-		return
-	}
-
-	//验证密码是否正确
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(receiveUser.Password)); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"code": 400,
-			"msg":  "密码错误",
-		})
-		return
-	}
-
-	//发放token
-	var err error
-	token, err := utils.ReleaseToken(user)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "msg": "系统异常"})
-	}
-
-	//获取user对应的所有地址
-	var addressArray []model.UserAddress
-	DB.Model(&model.UserAddress{}).Where("user_id=?", user.ID).Find(&addressArray)
-
-	//for _, v := range addressArray {
-	//	println("id", v.ID)
-	//	println("Receiver", v.Receiver)
-	//	println("Contact", v.Contact)
-	//	println("Address", v.Address)
-	//	println("UserID", v.UserID)
-	//
-	//}
-
-	//如果user地址数组为空，则返回nil
-	if len(addressArray) == 0 {
-		ctx.JSON(200, gin.H{
-			"code": 200,
-			"msg":  "登录成功",
-			"result": gin.H{
-				"id":            user.ID,
-				"account":       user.Telephone,
-				"token":         token,
-				"avatar":        user.Avatar,
-				"nickname":      user.Name,
-				"gender":        user.Gender,
-				"userAddresses": nil,
-			},
-		})
-	} else {
-		//创建响应数组
-		var apiAddresses []api.Address
-		for _, address := range addressArray {
-			resAddress := api.Address{AddressID: strconv.Itoa(int(address.ID)), Receiver: address.Receiver, Contact: address.Contact, Address: address.Address}
-			apiAddresses = append(apiAddresses, resAddress)
-		}
-		ctx.JSON(200, gin.H{
-			"code": 200,
-			"msg":  "登录成功",
-			"result": gin.H{
-				"id":            user.ID,
-				"account":       user.Telephone,
-				"token":         token,
-				"avatar":        user.Avatar,
-				"nickname":      user.Name,
-				"gender":        user.Gender,
-				"userAddresses": apiAddresses,
-			},
-		},
-		)
-	}
 }
 
 // 验证手机号是否已被注册
