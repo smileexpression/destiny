@@ -29,11 +29,11 @@ func NewUserController(r *gin.Engine, db *gorm.DB) *UserController {
 	}
 }
 
-func (u *UserController) Register() {
-	rg := u.r.Group("")
+func (c *UserController) Register() {
+	rg := c.r.Group("")
 
-	rg.POST("/login", u.login)
-	rg.POST("/register", u.register)
+	rg.POST("/login", c.login)
+	rg.POST("/register", c.register)
 }
 
 // login 登录接口函数
@@ -131,7 +131,7 @@ func (c *UserController) login(ctx *gin.Context) {
 }
 
 // register 注册接口函数
-func (u *UserController) register(ctx *gin.Context) {
+func (c *UserController) register(ctx *gin.Context) {
 	var (
 		ctx0 = ctx.Request.Context()
 		log  = logger.SmileLog.WithContext(ctx0)
@@ -165,7 +165,7 @@ func (u *UserController) register(ctx *gin.Context) {
 	}
 
 	//验证手机号是否被注册过
-	if err := u.isTelephoneExist(receiveUser.Telephone); err != nil {
+	if err := c.isTelephoneExist(receiveUser.Telephone); err != nil {
 		log.Errorf("telephone number exists: %s", receiveUser.Telephone)
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "telephone number exists"})
 		return
@@ -186,7 +186,7 @@ func (u *UserController) register(ctx *gin.Context) {
 		Gender:    receiveUser.Gender,
 		Avatar:    receiveUser.Avatar,
 	}
-	if err = u.db.Create(&newUser).Error; err != nil {
+	if err = c.db.Create(&newUser).Error; err != nil {
 		log.WithError(err).Error("create user failed")
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -205,13 +205,13 @@ func (u *UserController) register(ctx *gin.Context) {
 }
 
 // 验证手机号是否已被注册
-func (u *UserController) isTelephoneExist(telephone string) error {
+func (c *UserController) isTelephoneExist(telephone string) error {
 	var user model.User
-	if err := u.db.Where("telephone = ?", telephone).First(&user).Error; err != nil {
+	if err := c.db.Where("telephone = ?", telephone).First(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil
+		}
 		return err
-	}
-	if user.ID != 0 {
-		return errors.New("telephone exists")
 	}
 	return nil
 }
