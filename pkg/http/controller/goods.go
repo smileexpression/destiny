@@ -141,6 +141,7 @@ func (c *GoodsController) goods(ctx *gin.Context) {
 	}
 
 	result := make([]api.Goods, len(cate))
+	// 接入redis
 	key := fmt.Sprintf("home/goods_%d", len(cate))
 
 	data, err := c.cacheClient.Get(ctx0, key)
